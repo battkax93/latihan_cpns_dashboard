@@ -36,6 +36,36 @@ class dashBoard extends StatefulWidget {
 
 class _dashBoardState extends State<dashBoard> {
 
+  void showDialog() {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 300,
+            child: SizedBox.expand(child: FlutterLogo()),
+            margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +82,7 @@ class _dashBoardState extends State<dashBoard> {
               children: [
                 InkWell(
                   onTap: () {
-                    // bloc.fetchCountSoal('TIU', context);
+                    showDialog();
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),
@@ -101,7 +131,7 @@ class _dashBoardState extends State<dashBoard> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewSoal()));
+                            builder: (context) => ViewSoal(jenisSoal: 'TIU',)));
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),

@@ -6,11 +6,14 @@ import '../models/soal_all.dart';
 class DashboardProvider {
   Client client = Client();
   final endPoint = "http://192.168.100.22/latihan_cpns/api";
-  final soalAllKey = "getAllTiuSoal.php";
+  final soalTiuKey = "getAllTiuSoal.php";
+  final soalTkpKey = "getAllTkpSoal.php";
+  final soalTwkKey = "getAllTwkSoal.php";
+  final hitungSoalKey = "hitungSoal.php";
 
   Future<soalAllModel> fetchAllSoal() async {
     print('run fetchAllSoal');
-    String _url = '$endPoint/$soalAllKey';
+    var _url = '$endPoint/$soalTwkKey';
     final res = await client.get(_url);
     if(res.statusCode==200){
       return soalAllModel.fromJson((jsonDecode(res.body)));
@@ -18,6 +21,7 @@ class DashboardProvider {
       throw Exception(('Failed to get All Soal'));
     }
   }
+
 }
 
 
