@@ -11,17 +11,21 @@ class DashboardProvider {
   final soalTwkKey = "getAllTwkSoal.php";
   final hitungSoalKey = "hitungSoal.php";
 
-  Future<soalAllModel> fetchAllSoal() async {
+  Future<soalAllModel> fetchAllSoal(String jenisSoal) async {
     print('run fetchAllSoal');
-    var _url = '$endPoint/$soalTwkKey';
+    var _url;
+    if (jenisSoal == 'TIU') {
+      _url = '$endPoint/$soalTiuKey';
+    } else if (jenisSoal == 'TKP') {
+      _url = '$endPoint/$soalTkpKey';
+    } else {
+      _url = '$endPoint/$soalTwkKey';
+    }
     final res = await client.get(_url);
-    if(res.statusCode==200){
+    if (res.statusCode == 200) {
       return soalAllModel.fromJson((jsonDecode(res.body)));
     } else {
       throw Exception(('Failed to get All Soal'));
     }
   }
-
 }
-
-

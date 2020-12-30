@@ -6,5 +6,5 @@ class Repository {
   final dashBoardProvider = DashboardProvider();
 
   //get soal from server
-  Future<soalAllModel> fetchAllSoal() => dashBoardProvider.fetchAllSoal();
+  Future<soalAllModel> fetchAllSoal(String jenisSoal) => dashBoardProvider.fetchAllSoal(jenisSoal);
 }

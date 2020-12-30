@@ -24,7 +24,7 @@ class _ViewSoalState extends State<ViewSoal> {
 
   @override
   void initState() {
-    bloc.fetchAllSoal();
+    bloc.fetchAllSoal(jenisSoal);
     super.initState();
   }
 

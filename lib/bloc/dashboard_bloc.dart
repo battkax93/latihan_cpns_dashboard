@@ -15,8 +15,8 @@ class DashboardBloc {
 
   Observable<soalAllModel> get allSoal => _soalAllFetcher.stream;
 
-  fetchAllSoal() async {
-    soalAllModel soalAll = await _repository.fetchAllSoal();
+  fetchAllSoal(String jenisSoal) async {
+    soalAllModel soalAll = await _repository.fetchAllSoal(jenisSoal);
     if (!_soalAllFetcher.isClosed) _soalAllFetcher.sink.add(soalAll);
     tempSoalAll = soalAll;
   }

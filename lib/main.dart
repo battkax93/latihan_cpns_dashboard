@@ -131,7 +131,7 @@ class _dashBoardState extends State<dashBoard> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewSoal(jenisSoal: 'TIU',)));
+                            builder: (context) => ViewSoal(jenisSoal: 'TKP',)));
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),
