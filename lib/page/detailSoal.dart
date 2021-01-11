@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/models/soal_all.dart';
+import 'package:latihan_cpns_dashboard/models/soal.dart';
 import '../bloc/dashboard_bloc.dart';
 
 class DetailSoal extends StatefulWidget {
-
-  final soalAllModel soalAll;
+  final Soal soal;
   final int soalIndex;
 
-  const DetailSoal({Key key,@required this.soalAll, @required this.soalIndex}) : super(key: key);
-
-
+  const DetailSoal({Key key, @required this.soal, @required this.soalIndex})
+      : super(key: key);
 
   @override
-  _DetailSoalState createState() => _DetailSoalState(soalAll, soalIndex);
+  _DetailSoalState createState() => _DetailSoalState(soal, soalIndex);
 }
 
 class _DetailSoalState extends State<DetailSoal> {
-
-  final soalAllModel soalAll;
+  final Soal soal;
   final int soalIndex;
 
-  _DetailSoalState(this.soalAll, this.soalIndex);
+  _DetailSoalState(this.soal, this.soalIndex);
 
   final bloc = DashboardBloc();
   final _controllerSoal = TextEditingController();
@@ -37,13 +35,13 @@ class _DetailSoalState extends State<DetailSoal> {
     super.initState();
   }
 
-  void setTextSoal(){
-    _controllerSoal.text = soalAll.soalData[soalIndex].soal;
-    _controllerA.text = soalAll.soalData[soalIndex].a;
-    _controllerB.text = soalAll.soalData[soalIndex].b;
-    _controllerC.text = soalAll.soalData[soalIndex].c;
-    _controllerD.text = soalAll.soalData[soalIndex].d;
-    _controllerKey.text = soalAll.soalData[soalIndex].jawabanBenar;
+  void setTextSoal() {
+    _controllerSoal.text = soal.data[soalIndex].soal;
+    _controllerA.text = soal.data[soalIndex].a;
+    _controllerB.text = soal.data[soalIndex].b;
+    _controllerC.text = soal.data[soalIndex].c;
+    _controllerD.text = soal.data[soalIndex].d;
+    _controllerKey.text = soal.data[soalIndex].jawabanBenar;
   }
 
   @override
@@ -54,15 +52,13 @@ class _DetailSoalState extends State<DetailSoal> {
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.yellow[100],
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                offset: Offset(0.0, 0.2), //(x,y)
-                blurRadius: 0.5,
-              ),
-            ]),
+        decoration: BoxDecoration(color: Colors.yellow[100], boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            offset: Offset(0.0, 0.2), //(x,y)
+            blurRadius: 0.5,
+          ),
+        ]),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -73,14 +69,12 @@ class _DetailSoalState extends State<DetailSoal> {
                   maxLines: 10,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'SOAL',
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'SOAL',
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //SOAL
               Container(
@@ -90,14 +84,12 @@ class _DetailSoalState extends State<DetailSoal> {
                   maxLines: 2,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'A',
-                    fillColor: Colors.green[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'A',
+                      fillColor: Colors.green[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //A
               Container(
@@ -107,14 +99,12 @@ class _DetailSoalState extends State<DetailSoal> {
                   maxLines: 2,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'B',
-                    fillColor: Colors.red[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'B',
+                      fillColor: Colors.red[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //B
               Container(
@@ -124,14 +114,12 @@ class _DetailSoalState extends State<DetailSoal> {
                   maxLines: 2,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'C',
-                    fillColor: Colors.blue[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'C',
+                      fillColor: Colors.blue[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //C
               Container(
@@ -141,14 +129,12 @@ class _DetailSoalState extends State<DetailSoal> {
                   maxLines: 2,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'D',
-                    fillColor: Colors.orange[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'D',
+                      fillColor: Colors.orange[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //D
               Container(
@@ -157,21 +143,32 @@ class _DetailSoalState extends State<DetailSoal> {
                   controller: _controllerKey,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'JAWABAN BENAR',
-                    fillColor: Colors.blueGrey[200],
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10)
-                    )
-                  ),
+                      filled: true,
+                      labelText: 'JAWABAN BENAR',
+                      fillColor: Colors.blueGrey[200],
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10))),
                 ),
               ), //JAWABAN BENAR
               Wrap(
                 children: [
                   InkWell(
                     onTap: () {
-                      print('press simpan');
+                      bloc.updateSoal(
+                          soal,
+                          soalIndex,
+                          soal.data[soalIndex].jenis,
+                          _controllerSoal.text,
+                          _controllerA.text,
+                          _controllerB.text,
+                          _controllerC.text,
+                          _controllerD.text,
+                          _controllerKey.text,
+                          'xsxsx',
+                          0,
+                          0);
+                      print(_controllerB.text);
                     },
                     child: Container(
                       width: double.infinity,
@@ -192,13 +189,10 @@ class _DetailSoalState extends State<DetailSoal> {
                   ),
                 ],
               ),
-
             ],
           ),
         ),
       ),
     );
   }
-
-
 }

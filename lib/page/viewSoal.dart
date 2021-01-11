@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/models/soal_all.dart';
+import 'package:latihan_cpns_dashboard/models/soal.dart';
 import '../bloc/dashboard_bloc.dart';
 import 'package:latihan_cpns_dashboard/page/detailSoal.dart';
 
@@ -40,7 +41,7 @@ class _ViewSoalState extends State<ViewSoal> {
       appBar: AppBar(title: Text('SOAL $jenisSoal')),
       body: new StreamBuilder(
         stream: bloc.allSoal,
-        builder: (context, AsyncSnapshot<soalAllModel> snapshot) {
+        builder: (context, AsyncSnapshot<Soal> snapshot) {
           if (snapshot.hasData) {
             return buildList(snapshot);
           } else if (snapshot.hasError) {
@@ -52,7 +53,7 @@ class _ViewSoalState extends State<ViewSoal> {
     );
   }
 
-  Widget buildList(AsyncSnapshot<soalAllModel> snapshot) {
+  Widget buildList(AsyncSnapshot<Soal> snapshot) {
     return Column(
       children: [
         Container(
@@ -61,13 +62,13 @@ class _ViewSoalState extends State<ViewSoal> {
           padding: const EdgeInsets.all(10),
           child: Center(
               child: Text(
-            'jumlah soal ${snapshot.data.soalData.length}',
+            'jumlah soal ${snapshot.data.data.length}',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           )),
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: snapshot.data.soalData.length,
+            itemCount: snapshot.data.data.length,
             itemBuilder: (context, i) {
               return InkWell(
                 onTap: (){
@@ -75,7 +76,7 @@ class _ViewSoalState extends State<ViewSoal> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailSoal(soalAll: snapshot.data, soalIndex: i,)));
+                          builder: (context) => DetailSoal(soal: snapshot.data, soalIndex: i,)));
                 },
                 child: Container(
                   height: 70,
@@ -96,7 +97,7 @@ class _ViewSoalState extends State<ViewSoal> {
                     children: [
                       Container(
                         child: Text(
-                          snapshot.data.soalData[i].id,
+                          '$i',
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
@@ -107,7 +108,7 @@ class _ViewSoalState extends State<ViewSoal> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           child: Text(
-                            snapshot.data.soalData[i].soal,
+                            snapshot.data.data[i].soal,
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold),
                             softWrap: true,
