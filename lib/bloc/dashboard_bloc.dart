@@ -7,7 +7,6 @@ import '../models/soal.dart';
 import '../page/viewSoal.dart';
 
 class DashboardBloc {
-
   Soal tempSoalAll;
 
   final _repository = Repository();
@@ -22,7 +21,11 @@ class DashboardBloc {
     tempSoalAll = soal;
   }
 
-  updateSoal( Soal soalAll,
+  deleteSoal(BuildContext ctx, String id, String jenis) async { await _repository.deleteSoal(ctx, id, jenis);}
+
+  updateSoal(
+      BuildContext ctx,
+      Soal soalAll,
       int idx,
       String jenis,
       String soal,
@@ -34,11 +37,40 @@ class DashboardBloc {
       String img,
       int bnr,
       int slh) async {
-    await _repository.updateSoal(soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+    await _repository.updateSoal(
+        ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
   }
 
   dispose() {
     _soalAllFetcher.close();
   }
 
+  void showDialogLoading(BuildContext ctx) {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      context: ctx,
+      pageBuilder: (_, __, ___) {
+        return Center(
+          child: Container(
+              height: 300,
+              width: 300,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+              )),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+          child: child,
+        );
+      },
+    );
+  }
 }

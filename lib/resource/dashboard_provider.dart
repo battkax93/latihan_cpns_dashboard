@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'dart:convert';
-import '../models/soal_all.dart';
+import '../bloc/dashboard_bloc.dart';
 import '../models/soal.dart';
 
 class DashboardProvider {
@@ -13,13 +14,9 @@ class DashboardProvider {
   final addSoalKey = "addSoal.php";
   final hitungSoalKey = "hitungSoal.php";
 
-  // final soalTiuKey = "getAllTiuSoal.php";
-  // final soalTkpKey = "getAllTkpSoal.php";
-  // final soalTwkKey = "getAllTwkSoal.php";
-
   Future<Soal> fetchAllSoal(String jenisSoal) async {
-    print('run fetchAllSoal');
-    var _url = '$endPoint/$soalKey?$jenisSoal';
+    print('run fetchAllSoal $jenisSoal');
+    var _url = '$endPoint/$soalKey?jenis=$jenisSoal';
     final res = await client.get(_url);
     if (res.statusCode == 200) {
       return Soal.fromJson((jsonDecode(res.body)));
@@ -28,7 +25,18 @@ class DashboardProvider {
     }
   }
 
-   updateSoal( Soal soalAll,
+  deleteSoal(BuildContext ctx, String id, String jenis) async {
+    print(id);
+    // bloc.showDialogLoading(ctx);
+    var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
+    final res = await client.get(_url);
+    if(res.statusCode == 200){
+      print('${res.body}');
+      Navigator.pop(ctx, 1);
+    }
+  }
+
+   updateSoal( BuildContext ctx,  Soal soalAll,
        int idx,
        String jenis,
        String soal,
@@ -40,8 +48,7 @@ class DashboardProvider {
        String img,
        int bnr,
        int slh) async {
-    var res = await client.put(
-      '$endPoint/$updateSoalKey',
+    var res = await client.put('$endPoint/$updateSoalKey',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -62,6 +69,7 @@ class DashboardProvider {
     int statusCode = res.statusCode;
     if (statusCode == 200) {
       print('${res.body}');
+      Navigator.pop(ctx, 1);
     }
   }
 

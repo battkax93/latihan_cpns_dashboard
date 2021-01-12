@@ -4,8 +4,6 @@ import 'package:latihan_cpns_dashboard/models/soal.dart';
 import '../bloc/dashboard_bloc.dart';
 import 'package:latihan_cpns_dashboard/page/detailSoal.dart';
 
-
-
 class ViewSoal extends StatefulWidget {
   final String jenisSoal;
 
@@ -25,6 +23,7 @@ class _ViewSoalState extends State<ViewSoal> {
 
   @override
   void initState() {
+    print(jenisSoal);
     bloc.fetchAllSoal(jenisSoal);
     super.initState();
   }
@@ -71,12 +70,23 @@ class _ViewSoalState extends State<ViewSoal> {
             itemCount: snapshot.data.data.length,
             itemBuilder: (context, i) {
               return InkWell(
-                onTap: (){
+                onTap: () {
                   print(i);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailSoal(soal: snapshot.data, soalIndex: i,)));
+                          builder: (context) => DetailSoal(
+                                soal: snapshot.data,
+                                soalIndex: i,
+                              ))).then((value) {
+                    if (value == 1) {
+                      setState(() {
+                        bloc.fetchAllSoal(jenisSoal);
+                      });
+                    } else {
+                      print('gagal');
+                    }
+                  });
                 },
                 child: Container(
                   height: 70,
@@ -101,7 +111,7 @@ class _ViewSoalState extends State<ViewSoal> {
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        color:Colors.redAccent,
+                        color: Colors.redAccent,
                         padding: const EdgeInsets.all(28),
                       ), //id
                       Expanded(
@@ -170,4 +180,3 @@ class _ViewSoalState extends State<ViewSoal> {
     );
   }
 }
-

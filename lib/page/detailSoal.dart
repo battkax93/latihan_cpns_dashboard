@@ -151,34 +151,62 @@ class _DetailSoalState extends State<DetailSoal> {
                           borderRadius: BorderRadius.circular(10))),
                 ),
               ), //JAWABAN BENAR
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                child: Wrap(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        bloc.updateSoal(
+                            context,
+                            soal,
+                            soalIndex,
+                            soal.data[soalIndex].jenis,
+                            _controllerSoal.text,
+                            _controllerA.text,
+                            _controllerB.text,
+                            _controllerC.text,
+                            _controllerD.text,
+                            _controllerKey.text,
+                            'xsxsx',
+                            0,
+                            0);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.orange[400],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'SIMPAN',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ), // SIMPAN
               Wrap(
                 children: [
                   InkWell(
                     onTap: () {
-                      bloc.updateSoal(
-                          soal,
-                          soalIndex,
-                          soal.data[soalIndex].jenis,
-                          _controllerSoal.text,
-                          _controllerA.text,
-                          _controllerB.text,
-                          _controllerC.text,
-                          _controllerD.text,
-                          _controllerKey.text,
-                          'xsxsx',
-                          0,
-                          0);
-                      print(_controllerB.text);
+                      bloc.deleteSoal(context, soal.data[soalIndex].id, soal.data[soalIndex].jenis);
                     },
                     child: Container(
                       width: double.infinity,
                       height: 50,
                       decoration: BoxDecoration(
-                          color: Colors.orange[400],
+                          color: Colors.teal[700],
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                          'SIMPAN',
+                          'HAPUS',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -188,7 +216,7 @@ class _DetailSoalState extends State<DetailSoal> {
                     ),
                   ),
                 ],
-              ),
+              ), // HAPUS
             ],
           ),
         ),
