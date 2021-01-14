@@ -38,7 +38,7 @@ class DashboardProvider {
     }
   }
 
-  addNewSoal(BuildContext ctx,
+  Future addNewSoal(BuildContext ctx,
       String jenis,
       String soal,
       String a,
@@ -49,13 +49,25 @@ class DashboardProvider {
       String img,
       int bnr,
       int slh) async {
-    var _val = 'jenis=$jenis&soal=$soal&a=$a&b=$b&c=$c&d=$d&jawaban_benar=$jawaban&img=xfxf&benar=0&salah=0';
-    var _url = '$endPoint/$addSoalKey?$_val';
-    print(_val);
-    var _res = await client.post(_url);
+    var _url = '$endPoint/$addSoalKey';
+    var _headers= {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var _body = {
+      'jenis': jenis,
+      'soal': soal,
+      'a': a,
+      'b': b,
+      'c': c,
+      'd': d,
+      'jawaban_benar': jawaban,
+      'image': img,
+      'benar': bnr.toString(),
+      'salah': slh.toString()
+    };
+    var _res = await client.post(_url, body: _body, headers: _headers);
     int statusCode = _res.statusCode;
     if(statusCode==200){
-      print('succces');
       print(_res.body);
     }
   }
@@ -73,28 +85,29 @@ class DashboardProvider {
        int bnr,
        int slh) async {
     var _url = '$endPoint/$updateSoalKey';
-    var res = await client.put(_url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'id': soalAll.data[idx].id,
-        'jenis': jenis,
-        'soal': soal,
-        'a': a,
-        'b': b,
-        'c': c,
-        'd': d,
-        'jawaban_benar': jawaban,
-        'image': img,
-        'benar': bnr.toString(),
-        'salah': slh.toString(),
-      }),
-    );
-    int statusCode = res.statusCode;
-    if (statusCode == 200) {
+    var _headers= <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    var _body = jsonEncode(<String, String>{
+      'id': soalAll.data[idx].id,
+      'jenis': jenis,
+      'soal': soal,
+      'a': a,
+      'b': b,
+      'c': c,
+      'd': d,
+      'jawaban_benar': jawaban,
+      'image': img,
+      'benar': bnr.toString(),
+      'salah': slh.toString(),
+    });
+    var res = await client.put(_url, headers: _headers, body: _body);
+    if (res.body.contains('true')) {
       print('${res.body}');
-      Navigator.pop(ctx, 1);
+      Navigator.pop(ctx, 3);
+    } else {
+      print('${res.body}');
+      Navigator.pop(ctx, 4);
     }
   }
 

@@ -86,7 +86,14 @@ class _ViewSoalState extends State<ViewSoal> {
                         bloc.fetchAllSoal(jenisSoal);
                       });
                     } else if (value == 2) {
-                      bloc.showCommonDialog(context, 'gagal');
+                      bloc.showCommonDialog(context, 'GAGAL MENGHAPUS SOAL');
+                    } else if (value == 3){
+                      bloc.showCommonDialog(context, 'SUKSES UPDATE SOAL');
+                      setState(() {
+                        bloc.fetchAllSoal(jenisSoal);
+                      });
+                    } else if (value == 4) {
+                      bloc.showCommonDialog(context, 'GAGAL UPDATE SOAL');
                     }
                   });
                 },
@@ -107,15 +114,26 @@ class _ViewSoalState extends State<ViewSoal> {
                           topRight: Radius.circular(10))),
                   child: Row(
                     children: [
-                      Container(
-                        child: Text(
-                          '$i',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        color: Colors.redAccent,
-                        padding: const EdgeInsets.all(28),
-                      ), //id
+                      Stack(
+                        children: [
+                          Container(
+                            child: SizedBox(
+                              width: 14,
+                              height: 14,
+                            ),
+                            color: Colors.redAccent,
+                            padding: const EdgeInsets.all(28),
+                          ), //id
+                          Container(
+                            child: Text(
+                              '$i',
+                              style: TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            padding: const EdgeInsets.all(28),
+                          ),
+                        ],
+                      ),
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.all(10),

@@ -103,7 +103,7 @@ class DashboardBloc {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: Text(txt)),
+              child: Center(child: Text(txt))),
         );
       },
       transitionBuilder: (_, anim, __, child) {
