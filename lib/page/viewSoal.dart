@@ -79,12 +79,14 @@ class _ViewSoalState extends State<ViewSoal> {
                                 soal: snapshot.data,
                                 soalIndex: i,
                               ))).then((value) {
+                                print(value);
                     if (value == 1) {
+                      bloc.showCommonDialog(context, 'SUKSES MENGHAPUS SOAL');
                       setState(() {
                         bloc.fetchAllSoal(jenisSoal);
                       });
-                    } else {
-                      print('gagal');
+                    } else if (value == 2) {
+                      bloc.showCommonDialog(context, 'gagal');
                     }
                   });
                 },
@@ -133,48 +135,6 @@ class _ViewSoalState extends State<ViewSoal> {
               );
             },
           ),
-          /*child: GridView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data.soalData.length,
-              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1),
-              itemBuilder: (BuildContext context, int i) {
-                return GridTile(
-                  child: InkResponse(
-                    enableFeedback: true,
-                    child: new Padding(
-                      padding: EdgeInsets.all(3),
-                      child: new ClipRRect(
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(10),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Colors.orange[400],
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0.0, 0.5), //(x,y)
-                                  blurRadius: 1.0,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Text(
-                              '${snapshot.data.soalData[i].soal}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),*/
         ),
       ],
     );

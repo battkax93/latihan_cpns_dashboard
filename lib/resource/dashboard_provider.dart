@@ -30,9 +30,33 @@ class DashboardProvider {
     // bloc.showDialogLoading(ctx);
     var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
     final res = await client.get(_url);
-    if(res.statusCode == 200){
+    if(res.body.contains('true')){
       print('${res.body}');
       Navigator.pop(ctx, 1);
+    } else {
+      Navigator.pop(ctx, 2);
+    }
+  }
+
+  addNewSoal(BuildContext ctx,
+      String jenis,
+      String soal,
+      String a,
+      String b,
+      String c,
+      String d,
+      String jawaban,
+      String img,
+      int bnr,
+      int slh) async {
+    var _val = 'jenis=$jenis&soal=$soal&a=$a&b=$b&c=$c&d=$d&jawaban_benar=$jawaban&img=xfxf&benar=0&salah=0';
+    var _url = '$endPoint/$addSoalKey?$_val';
+    print(_val);
+    var _res = await client.post(_url);
+    int statusCode = _res.statusCode;
+    if(statusCode==200){
+      print('succces');
+      print(_res.body);
     }
   }
 
@@ -48,7 +72,8 @@ class DashboardProvider {
        String img,
        int bnr,
        int slh) async {
-    var res = await client.put('$endPoint/$updateSoalKey',
+    var _url = '$endPoint/$updateSoalKey';
+    var res = await client.put(_url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

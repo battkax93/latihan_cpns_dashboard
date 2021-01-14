@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/page/viewSoal.dart';
+import 'package:latihan_cpns_dashboard/page/addSoal.dart';
 
 void main() {
   runApp(MyApp());
@@ -51,6 +52,11 @@ class _dashBoardState extends State<dashBoard> {
               children: [
                 InkWell(
                   onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddSoal(
+                            )));
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),

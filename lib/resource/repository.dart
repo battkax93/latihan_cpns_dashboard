@@ -31,4 +31,17 @@ class Repository {
           int slh) =>
       dashBoardProvider.updateSoal(
           ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+
+  //add new soal to server
+  addNewSoal(BuildContext ctx,
+      String jenis,
+      String soal,
+      String a,
+      String b,
+      String c,
+      String d,
+      String jawaban,
+      String img,
+      int bnr,
+      int slh)=> dashBoardProvider.addNewSoal(ctx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
 }
