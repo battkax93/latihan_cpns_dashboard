@@ -14,6 +14,8 @@ class Repository {
   //hapus soal dari server
   deleteSoal(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal(ctx, id, jenis);
 
+  Future<int> deleteSoal2(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal2(ctx, id, jenis);
+
   //update soal from server
   updateSoal(
           BuildContext ctx,

@@ -34,6 +34,24 @@ class _ViewSoalState extends State<ViewSoal> {
     super.dispose();
   }
 
+  checkReturn(int value) {
+    if (value == 1) {
+      bloc.showCommonDialog(context, 'SUKSES MENGHAPUS SOAL');
+      setState(() {
+        bloc.fetchAllSoal(jenisSoal);
+      });
+    } else if (value == 2) {
+      bloc.showCommonDialog(context, 'GAGAL MENGHAPUS SOAL');
+    } else if (value == 3) {
+      bloc.showCommonDialog(context, 'SUKSES UPDATE SOAL');
+      setState(() {
+        bloc.fetchAllSoal(jenisSoal);
+      });
+    } else if (value == 4) {
+      bloc.showCommonDialog(context, 'GAGAL UPDATE SOAL');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,22 +97,8 @@ class _ViewSoalState extends State<ViewSoal> {
                                 soal: snapshot.data,
                                 soalIndex: i,
                               ))).then((value) {
-                                print(value);
-                    if (value == 1) {
-                      bloc.showCommonDialog(context, 'SUKSES MENGHAPUS SOAL');
-                      setState(() {
-                        bloc.fetchAllSoal(jenisSoal);
-                      });
-                    } else if (value == 2) {
-                      bloc.showCommonDialog(context, 'GAGAL MENGHAPUS SOAL');
-                    } else if (value == 3){
-                      bloc.showCommonDialog(context, 'SUKSES UPDATE SOAL');
-                      setState(() {
-                        bloc.fetchAllSoal(jenisSoal);
-                      });
-                    } else if (value == 4) {
-                      bloc.showCommonDialog(context, 'GAGAL UPDATE SOAL');
-                    }
+                    print(value);
+                    checkReturn(value);
                   });
                 },
                 child: Container(
@@ -128,7 +132,8 @@ class _ViewSoalState extends State<ViewSoal> {
                             child: Text(
                               '$i',
                               style: TextStyle(
-                                  color: Colors.white, fontWeight: FontWeight.bold),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                             padding: const EdgeInsets.all(28),
                           ),
@@ -147,6 +152,19 @@ class _ViewSoalState extends State<ViewSoal> {
                           ),
                         ),
                       ), //soal
+                      InkWell(
+                        child: Container(
+                          child:Icon(Icons.delete, color: Colors.black26,),
+                          padding: const EdgeInsets.all(10),
+                        ),
+                        onTap: (){
+                          bloc.deleteSoal2(context, snapshot.data.data[i].id, jenisSoal).then((value) {
+                            if(value)setState(() {
+                              bloc.fetchAllSoal(jenisSoal);
+                            });
+                          });
+                        },
+                      ), //id
                     ],
                   ),
                 ),

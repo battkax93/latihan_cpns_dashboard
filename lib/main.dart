@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/page/viewSoal.dart';
 import 'package:latihan_cpns_dashboard/page/addSoal.dart';
+import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -36,6 +38,8 @@ class dashBoard extends StatefulWidget {
 }
 
 class _dashBoardState extends State<dashBoard> {
+  final bloc = DashboardBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +60,13 @@ class _dashBoardState extends State<dashBoard> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => AddSoal(
-                            )));
+                            ))).then((value) {
+                              if(value==1){
+                                bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
+                              } else {
+                                bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
+                              }
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),
@@ -97,7 +107,7 @@ class _dashBoardState extends State<dashBoard> {
                   ),
                 ),
               ],
-            ),
+            ), //ADD
             Wrap(
               children: [
                 InkWell(
@@ -143,7 +153,7 @@ class _dashBoardState extends State<dashBoard> {
                   ),
                 ),
               ],
-            ),
+            ), //VIEW
             Wrap(
               children: [
                 InkWell(
@@ -189,7 +199,7 @@ class _dashBoardState extends State<dashBoard> {
                   ),
                 ),
               ],
-            ),
+            ), //SETTING
           ],
         ),
       ),

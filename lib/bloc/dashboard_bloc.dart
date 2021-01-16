@@ -8,6 +8,7 @@ import '../page/viewSoal.dart';
 
 class DashboardBloc {
   Soal tempSoalAll;
+  int isDeleted;
 
   final _repository = Repository();
 
@@ -36,6 +37,19 @@ class DashboardBloc {
   }
 
   deleteSoal(BuildContext ctx, String id, String jenis) async { await _repository.deleteSoal(ctx, id, jenis);}
+
+  Future<bool> deleteSoal2(BuildContext ctx, String id, String jenis) async {
+    showDialogLoading(ctx);
+    isDeleted = await _repository.deleteSoal2(ctx, id, jenis);
+    if(isDeleted==1){
+      Navigator.pop(ctx);
+      showCommonDialog(ctx, 'SUKSES MENGHAPUS SOAL');
+      return true;
+    }else {
+      showCommonDialog(ctx, 'GAGAL MENGHAPUS SOAL');
+      return true;
+    }
+  }
 
   updateSoal(
       BuildContext ctx,

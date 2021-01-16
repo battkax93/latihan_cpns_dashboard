@@ -36,6 +36,7 @@ class Data {
   String c;
   String d;
   String jawabanBenar;
+  String isConfirmed;
   String image;
   String benar;
   String salah;
@@ -49,6 +50,7 @@ class Data {
         this.c,
         this.d,
         this.jawabanBenar,
+        this.isConfirmed,
         this.image,
         this.benar,
         this.salah});
@@ -62,6 +64,7 @@ class Data {
     c = json['c'];
     d = json['d'];
     jawabanBenar = json['jawaban_benar'];
+    isConfirmed = json['is_confirmed'];
     image = json['image'];
     benar = json['benar'];
     salah = json['salah'];
@@ -77,6 +80,7 @@ class Data {
     data['c'] = this.c;
     data['d'] = this.d;
     data['jawaban_benar'] = this.jawabanBenar;
+    data['is_confirmed'] = this.isConfirmed;
     data['image'] = this.image;
     data['benar'] = this.benar;
     data['salah'] = this.salah;

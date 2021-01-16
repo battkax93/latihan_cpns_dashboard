@@ -6,6 +6,7 @@ import '../bloc/dashboard_bloc.dart';
 import '../models/soal.dart';
 
 class DashboardProvider {
+  // final bloc = DashboardBloc();
   Client client = Client();
   final endPoint = "http://192.168.100.22/latihan_cpns/api";
   final soalKey = "soal.php";
@@ -27,7 +28,6 @@ class DashboardProvider {
 
   deleteSoal(BuildContext ctx, String id, String jenis) async {
     print(id);
-    // bloc.showDialogLoading(ctx);
     var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
     final res = await client.get(_url);
     if(res.body.contains('true')){
@@ -35,6 +35,18 @@ class DashboardProvider {
       Navigator.pop(ctx, 1);
     } else {
       Navigator.pop(ctx, 2);
+    }
+  }
+
+  Future<int> deleteSoal2(BuildContext ctx, String id, String jenis) async {
+    print(id);
+    var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
+    final res = await client.get(_url);
+    if(res.body.contains('true')){
+      print('${res.body}');
+      return 1;
+    } else {
+      return 0;
     }
   }
 
@@ -49,6 +61,7 @@ class DashboardProvider {
       String img,
       int bnr,
       int slh) async {
+    // bloc.showCommonDialog(ctx, 'MENGUPLOAD SOAL');
     var _url = '$endPoint/$addSoalKey';
     var _headers= {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -61,14 +74,17 @@ class DashboardProvider {
       'c': c,
       'd': d,
       'jawaban_benar': jawaban,
+      'is_confirmed': 1.toString(),
       'image': img,
       'benar': bnr.toString(),
       'salah': slh.toString()
     };
     var _res = await client.post(_url, body: _body, headers: _headers);
-    int statusCode = _res.statusCode;
-    if(statusCode==200){
-      print(_res.body);
+    print(_res.body);
+    if(_res.body.contains('true')){
+      Navigator.pop(ctx,1);
+    } else {
+      Navigator.pop(ctx,0);
     }
   }
 
@@ -97,6 +113,7 @@ class DashboardProvider {
       'c': c,
       'd': d,
       'jawaban_benar': jawaban,
+      'is_confirmed':1.toString(),
       'image': img,
       'benar': bnr.toString(),
       'salah': slh.toString(),
