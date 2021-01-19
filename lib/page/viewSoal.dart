@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:latihan_cpns_dashboard/models/soal_all.dart';
-import 'package:latihan_cpns_dashboard/models/soal.dart';
 import '../bloc/dashboard_bloc.dart';
-import 'package:latihan_cpns_dashboard/page/detailSoal.dart';
+import 'detail_page/confirmedSoal.dart';
+import 'detail_page/unconfirmedSoal.dart';
 
 class ViewSoal extends StatefulWidget {
   final String jenisSoal;
@@ -24,7 +23,6 @@ class _ViewSoalState extends State<ViewSoal> {
   @override
   void initState() {
     print(jenisSoal);
-    bloc.fetchAllSoal(jenisSoal);
     super.initState();
   }
 
@@ -34,7 +32,7 @@ class _ViewSoalState extends State<ViewSoal> {
     super.dispose();
   }
 
-  checkReturn(int value) {
+  checkReturn(BuildContext ctx, int value) {
     if (value == 1) {
       bloc.showCommonDialog(context, 'SUKSES MENGHAPUS SOAL');
       setState(() {
@@ -54,125 +52,25 @@ class _ViewSoalState extends State<ViewSoal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('SOAL $jenisSoal')),
-      body: new StreamBuilder(
-        stream: bloc.allSoal,
-        builder: (context, AsyncSnapshot<Soal> snapshot) {
-          if (snapshot.hasData) {
-            return buildList(snapshot);
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
-  }
-
-  Widget buildList(AsyncSnapshot<Soal> snapshot) {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          color: Colors.green,
-          padding: const EdgeInsets.all(10),
-          child: Center(
-              child: Text(
-            'jumlah soal ${snapshot.data.data.length}',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          )),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: snapshot.data.data.length,
-            itemBuilder: (context, i) {
-              return InkWell(
-                onTap: () {
-                  print(i);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailSoal(
-                                soal: snapshot.data,
-                                soalIndex: i,
-                              ))).then((value) {
-                    print(value);
-                    checkReturn(value);
-                  });
-                },
-                child: Container(
-                  height: 70,
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.yellow[200],
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(0.0, 0.2), //(x,y)
-                          blurRadius: 0.5,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(10),
-                          topRight: Radius.circular(10))),
-                  child: Row(
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            child: SizedBox(
-                              width: 14,
-                              height: 14,
-                            ),
-                            color: Colors.redAccent,
-                            padding: const EdgeInsets.all(28),
-                          ), //id
-                          Container(
-                            child: Text(
-                              '$i',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            padding: const EdgeInsets.all(28),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            snapshot.data.data[i].soal,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            softWrap: true,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ), //soal
-                      InkWell(
-                        child: Container(
-                          child:Icon(Icons.delete, color: Colors.black26,),
-                          padding: const EdgeInsets.all(10),
-                        ),
-                        onTap: (){
-                          bloc.deleteSoal2(context, snapshot.data.data[i].id, jenisSoal).then((value) {
-                            if(value)setState(() {
-                              bloc.fetchAllSoal(jenisSoal);
-                            });
-                          });
-                        },
-                      ), //id
-                    ],
+    return MaterialApp(
+          home: DefaultTabController(
+            length: 2,
+            initialIndex: 0,
+            child:  Scaffold(
+                appBar: AppBar(
+                  title: Text('SOAL $jenisSoal'),
+                  bottom: TabBar(
+                    tabs: [Tab(text: 'CONFIRMED'), Tab(text: 'UNCONFIRMED')],
                   ),
                 ),
-              );
-            },
+                body: TabBarView(
+                  children: [
+                    ConfirmedSoalView(jenisSoal: jenisSoal),
+                    UnconfirmedSoalView(jenisSoal: jenisSoal)
+                  ],
+                )
+            ),
           ),
-        ),
-      ],
     );
   }
 }

@@ -1,25 +1,26 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:latihan_cpns_dashboard/models/soal.dart';
-
+import '../models/confirmed_soal_models.dart';
+import '../models/unconfirmed_soal_models.dart';
 import 'dashboard_provider.dart';
-import '../models/soal_all.dart';
 
 class Repository {
   final dashBoardProvider = DashboardProvider();
 
   //get soal from server
-  Future<Soal> fetchAllSoal(String jenisSoal) => dashBoardProvider.fetchAllSoal(jenisSoal);
+  Future<ConfirmedSoal> fetchAllSoal(String jenisSoal) => dashBoardProvider.fetchAllSoal(jenisSoal);
+
+  Future<UnconfirmedSoal> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);
 
   //hapus soal dari server
   deleteSoal(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal(ctx, id, jenis);
 
-  Future<int> deleteSoal2(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal2(ctx, id, jenis);
+  Future<bool> deleteSoal2(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal2(ctx, id, jenis);
 
   //update soal from server
   updateSoal(
           BuildContext ctx,
-          Soal soalAll,
+          ConfirmedSoal soal_1,
           int idx,
           String jenis,
           String soal,
@@ -32,7 +33,24 @@ class Repository {
           int bnr,
           int slh) =>
       dashBoardProvider.updateSoal(
-          ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+          ctx, soal_1, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+
+  updateSoalUnconfirmed(
+      BuildContext ctx,
+      UnconfirmedSoal soal_2,
+      int idx,
+      String jenis,
+      String soal,
+      String a,
+      String b,
+      String c,
+      String d,
+      String jawaban,
+      String img,
+      int bnr,
+      int slh) =>
+      dashBoardProvider.updateSoalUnconfirmed(
+          ctx, soal_2, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
 
   //add new soal to server
   addNewSoal(BuildContext ctx,

@@ -1,11 +1,11 @@
-class Soal {
+class ConfirmedSoal {
   int code;
   String message;
   List<Data> data;
 
-  Soal({this.code, this.message, this.data});
+  ConfirmedSoal({this.code, this.message, this.data});
 
-  Soal.fromJson(Map<String, dynamic> json) {
+  ConfirmedSoal.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     message = json['message'];
     if (json['data'] != null) {

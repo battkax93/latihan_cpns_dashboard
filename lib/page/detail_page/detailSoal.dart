@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:latihan_cpns_dashboard/models/soal_all.dart';
-import 'package:latihan_cpns_dashboard/models/soal.dart';
-import '../bloc/dashboard_bloc.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../models/confirmed_soal_models.dart';
+import '../../bloc/dashboard_bloc.dart';
 
 class DetailSoal extends StatefulWidget {
-  final Soal soal;
+  final ConfirmedSoal soal;
   final int soalIndex;
 
   const DetailSoal({Key key, @required this.soal, @required this.soalIndex})
@@ -15,12 +18,22 @@ class DetailSoal extends StatefulWidget {
 }
 
 class _DetailSoalState extends State<DetailSoal> {
-  final Soal soal;
+  final ConfirmedSoal confirmedSoal;
   final int soalIndex;
 
-  _DetailSoalState(this.soal, this.soalIndex);
+  _DetailSoalState(this.confirmedSoal, this.soalIndex);
 
   final bloc = DashboardBloc();
+  Permission permissions;
+
+  String imgKey;
+  Future<File> file;
+  String status = '';
+  String fileName;
+  String base64Image;
+  File tmpFile;
+  String errMessage = 'Error Uploading Image';
+
   final _controllerSoal = TextEditingController();
   final _controllerA = TextEditingController();
   final _controllerB = TextEditingController();
@@ -30,19 +43,90 @@ class _DetailSoalState extends State<DetailSoal> {
 
   @override
   void initState() {
-    print('tes $soalIndex');
     setTextSoal();
+    initPlatformState();
     super.initState();
   }
 
-  void setTextSoal() {
-    _controllerSoal.text = soal.data[soalIndex].soal;
-    _controllerA.text = soal.data[soalIndex].a;
-    _controllerB.text = soal.data[soalIndex].b;
-    _controllerC.text = soal.data[soalIndex].c;
-    _controllerD.text = soal.data[soalIndex].d;
-    _controllerKey.text = soal.data[soalIndex].jawabanBenar;
+  initPlatformState() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
   }
+
+  void setTextSoal() {
+    _controllerSoal.text = confirmedSoal.data[soalIndex].soal;
+    _controllerA.text = confirmedSoal.data[soalIndex].a;
+    _controllerB.text = confirmedSoal.data[soalIndex].b;
+    _controllerC.text = confirmedSoal.data[soalIndex].c;
+    _controllerD.text = confirmedSoal.data[soalIndex].d;
+    _controllerKey.text = confirmedSoal.data[soalIndex].jawabanBenar;
+    imgKey =confirmedSoal.data[soalIndex].image;
+  }
+
+  setStatus(String message) {
+    setState(() {
+      status = message;
+    });
+  }
+
+  void chooseImage() {
+    setState(() {
+      // ignore: deprecated_member_use
+      file = ImagePicker.pickImage(source: ImageSource.gallery);
+    });
+  }
+
+  Widget showImage() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: InkWell(
+        onTap: (){
+          chooseImage();
+        },
+        child:file==null ? Image.network(
+                'http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',
+              ) :  FutureBuilder<File>(
+          future: file,
+          builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                null != snapshot.data) {
+              tmpFile = snapshot.data;
+              base64Image = base64Encode(snapshot.data.readAsBytesSync());
+              return Flexible(
+                child: Image.file(
+                  snapshot.data,
+                  fit: BoxFit.fill,
+                ),
+              );
+            } else if (null != snapshot.error) {
+              return const Text(
+                'Error Picking Image',
+                textAlign: TextAlign.center,
+              );
+            } else {
+              return const Text(
+                'No Image Selected',
+                textAlign: TextAlign.center,
+              );
+            }
+          },
+        ),
+            ));
+          }
+
+
+
+  startUpload() {
+    setStatus('Uploading Image...');
+    if (null == tmpFile) {
+      setStatus(errMessage);
+      return;
+    }
+    fileName = tmpFile.path.split('/').last;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +235,7 @@ class _DetailSoalState extends State<DetailSoal> {
                           borderRadius: BorderRadius.circular(10))),
                 ),
               ), //JAWABAN BENAR
+              showImage(),
               Container(
                 margin: EdgeInsets.only(bottom: 10),
                 child: Wrap(
@@ -159,16 +244,16 @@ class _DetailSoalState extends State<DetailSoal> {
                       onTap: () {
                         bloc.updateSoal(
                             context,
-                            soal,
+                            confirmedSoal,
                             soalIndex,
-                            soal.data[soalIndex].jenis,
+                            confirmedSoal.data[soalIndex].jenis,
                             _controllerSoal.text,
                             _controllerA.text,
                             _controllerB.text,
                             _controllerC.text,
                             _controllerD.text,
                             _controllerKey.text,
-                            'xsxsx',
+                            base64Image,
                             0,
                             0);
                       },
@@ -196,7 +281,7 @@ class _DetailSoalState extends State<DetailSoal> {
                 children: [
                   InkWell(
                     onTap: () {
-                      bloc.deleteSoal(context, soal.data[soalIndex].id, soal.data[soalIndex].jenis);
+                      bloc.deleteSoal(context, confirmedSoal.data[soalIndex].id, confirmedSoal.data[soalIndex].jenis);
                     },
                     child: Container(
                       width: double.infinity,

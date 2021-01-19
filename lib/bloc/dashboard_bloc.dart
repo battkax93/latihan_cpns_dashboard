@@ -2,24 +2,33 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../resource/repository.dart';
-import '../models/soal_all.dart';
-import '../models/soal.dart';
+import '../models/unconfirmed_soal_models.dart';
+import '../models/confirmed_soal_models.dart';
 import '../page/viewSoal.dart';
 
 class DashboardBloc {
-  Soal tempSoalAll;
+  ConfirmedSoal tempSoalAll;
+  UnconfirmedSoal tempSoalUnconfirmed;
   int isDeleted;
 
   final _repository = Repository();
 
-  final _soalAllFetcher = PublishSubject<Soal>();
+  final _soalAllFetcher = PublishSubject<ConfirmedSoal>();
+  final _soalUnconfirmedFetcher = PublishSubject<UnconfirmedSoal>();
 
-  Observable<Soal> get allSoal => _soalAllFetcher.stream;
+  Observable<ConfirmedSoal> get allSoal => _soalAllFetcher.stream;
+  Observable<UnconfirmedSoal> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
 
   fetchAllSoal(String jenisSoal) async {
-    Soal soal = await _repository.fetchAllSoal(jenisSoal);
-    if (!_soalAllFetcher.isClosed) _soalAllFetcher.sink.add(soal);
-    tempSoalAll = soal;
+    ConfirmedSoal _soal = await _repository.fetchAllSoal(jenisSoal);
+    if (!_soalAllFetcher.isClosed) _soalAllFetcher.sink.add(_soal);
+    tempSoalAll = _soal;
+  }
+
+  fetchUnconfirmedSoal(String jenisSoal) async {
+    UnconfirmedSoal _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
+    if (!_soalUnconfirmedFetcher.isClosed) _soalUnconfirmedFetcher.sink.add(_soal2);
+    tempSoalUnconfirmed = _soal2;
   }
 
   addNewSoal(BuildContext ctx,
@@ -39,21 +48,19 @@ class DashboardBloc {
   deleteSoal(BuildContext ctx, String id, String jenis) async { await _repository.deleteSoal(ctx, id, jenis);}
 
   Future<bool> deleteSoal2(BuildContext ctx, String id, String jenis) async {
-    showDialogLoading(ctx);
-    isDeleted = await _repository.deleteSoal2(ctx, id, jenis);
-    if(isDeleted==1){
-      Navigator.pop(ctx);
+    var _res = await _repository.deleteSoal2(ctx, id, jenis);
+    if(_res){
       showCommonDialog(ctx, 'SUKSES MENGHAPUS SOAL');
       return true;
-    }else {
+    } else {
       showCommonDialog(ctx, 'GAGAL MENGHAPUS SOAL');
-      return true;
+      return false;
     }
   }
 
   updateSoal(
       BuildContext ctx,
-      Soal soalAll,
+      ConfirmedSoal soalAll,
       int idx,
       String jenis,
       String soal,
@@ -69,9 +76,25 @@ class DashboardBloc {
         ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
   }
 
-  dispose() {
-    _soalAllFetcher.close();
+  updateSoalUnconfirmed(
+      BuildContext ctx,
+      UnconfirmedSoal soalAll,
+      int idx,
+      String jenis,
+      String soal,
+      String a,
+      String b,
+      String c,
+      String d,
+      String jawaban,
+      String img,
+      int bnr,
+      int slh) async {
+    await _repository.updateSoalUnconfirmed(
+        ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
   }
+
+
 
   void showDialogLoading(BuildContext ctx) {
     showGeneralDialog(
@@ -128,4 +151,27 @@ class DashboardBloc {
       },
     );
   }
+
+
+
+  checkReturn(BuildContext ctx, int value, String jenisSoal) {
+    if (value == 1) {
+      showCommonDialog(ctx, 'SUKSES MENGHAPUS SOAL');
+      fetchAllSoal(jenisSoal);
+    } else if (value == 2) {
+      showCommonDialog(ctx, 'GAGAL MENGHAPUS SOAL');
+    } else if (value == 3) {
+      showCommonDialog(ctx, 'SUKSES UPDATE SOAL');
+       fetchAllSoal(jenisSoal);
+    } else if (value == 4) {
+     showCommonDialog(ctx, 'GAGAL UPDATE SOAL');
+    }
+  }
+
+  dispose() {
+    _soalAllFetcher.close();
+    _soalUnconfirmedFetcher.close();
+  }
+
+
 }

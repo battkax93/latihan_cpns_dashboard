@@ -1,109 +1,46 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:image_picker/image_picker.dart';
-import '../bloc/dashboard_bloc.dart';
+import 'package:latihan_cpns_dashboard/models/unconfirmed_soal_models.dart';
+import '../../bloc/dashboard_bloc.dart';
 
-class AddSoal extends StatefulWidget {
+class DetailSoal2 extends StatefulWidget {
+  final UnconfirmedSoal soal2;
+  final int soalIndex;
+
+  const DetailSoal2({Key key, @required this.soal2, @required this.soalIndex})
+      : super(key: key);
+
   @override
-  _AddSoalState createState() => _AddSoalState();
+  _DetailSoal2State createState() => _DetailSoal2State(soal2, soalIndex);
 }
 
-class _AddSoalState extends State<AddSoal> {
+class _DetailSoal2State extends State<DetailSoal2> {
+  final UnconfirmedSoal soal2;
+  final int soalIndex;
+
+  _DetailSoal2State(this.soal2, this.soalIndex);
+
   final bloc = DashboardBloc();
-
-  Future<File> file;
-  String status = '';
-  String fileName;
-  String base64Image;
-  File tmpFile;
-  String errMessage = 'Error Uploading Image';
-
   final _controllerSoal = TextEditingController();
   final _controllerA = TextEditingController();
   final _controllerB = TextEditingController();
   final _controllerC = TextEditingController();
   final _controllerD = TextEditingController();
   final _controllerKey = TextEditingController();
-  var jenisSoal;
-  var img = 'xyxy';
 
   @override
   void initState() {
-    initPlatformState();
+    print('tes $soalIndex');
+    setTextSoal();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  initPlatformState() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-  }
-
-  setStatus(String message) {
-    setState(() {
-      status = message;
-    });
-  }
-
-  void chooseImage() {
-    setState(() {
-      // ignore: deprecated_member_use
-      file = ImagePicker.pickImage(source: ImageSource.gallery);
-    });
-  }
-
-  Widget showImage() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: InkWell(
-        onTap: (){
-          chooseImage();
-        },
-        child: FutureBuilder<File>(
-          future: file,
-          builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                null != snapshot.data) {
-              tmpFile = snapshot.data;
-              base64Image = base64Encode(snapshot.data.readAsBytesSync());
-              return Flexible(
-                child: Image.file(
-                  snapshot.data,
-                  fit: BoxFit.fill,
-                ),
-              );
-            } else if (null != snapshot.error) {
-              return const Text(
-                'Error Picking Image',
-                textAlign: TextAlign.center,
-              );
-            } else {
-              return const Text(
-                'No Image Selected',
-                textAlign: TextAlign.center,
-              );
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  startUpload() {
-    setStatus('Uploading Image...');
-    if (null == tmpFile) {
-      setStatus(errMessage);
-      return;
-    }
-    fileName = tmpFile.path.split('/').last;
+  void setTextSoal() {
+    _controllerSoal.text = soal2.data[soalIndex].soal;
+    _controllerA.text = soal2.data[soalIndex].a;
+    _controllerB.text = soal2.data[soalIndex].b;
+    _controllerC.text = soal2.data[soalIndex].c;
+    _controllerD.text = soal2.data[soalIndex].d;
+    _controllerKey.text = soal2.data[soalIndex].jawabanBenar;
   }
 
   @override
@@ -124,27 +61,6 @@ class _AddSoalState extends State<AddSoal> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                color: Colors.white,
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: jenisSoal == null
-                      ? Center(child: Text('PILIH JENIS SOAL'))
-                      : Center(child: Text(jenisSoal)),
-                  items: <String>['TIU', 'TWK', 'TKP'].map((String value) {
-                    return new DropdownMenuItem<String>(
-                      value: value,
-                      child: Center(child: new Text(value)),
-                    );
-                  }).toList(),
-                  onChanged: (_newVal) {
-                    setState(() {
-                      jenisSoal = _newVal;
-                    });
-                  },
-                ),
-              ),
               Container(
                 margin: EdgeInsets.only(bottom: 10, top: 10),
                 child: TextField(
@@ -234,21 +150,26 @@ class _AddSoalState extends State<AddSoal> {
                           borderRadius: BorderRadius.circular(10))),
                 ),
               ), //JAWABAN BENAR
-              showImage(),
               Container(
                 margin: EdgeInsets.only(bottom: 10),
                 child: Wrap(
                   children: [
                     InkWell(
                       onTap: () {
-                        print(base64Image);
-                        var _soal = _controllerSoal.text;
-                        var _a = _controllerA.text;
-                        var _b = _controllerB.text;
-                        var _c = _controllerC.text;
-                        var _d = _controllerD.text;
-                        var _key = _controllerKey.text;
-                        bloc.addNewSoal(context, jenisSoal, _soal, _a, _b, _c, _d, _key, base64Image, 0, 0);
+                        bloc.updateSoalUnconfirmed(
+                            context,
+                            soal2,
+                            soalIndex,
+                            soal2.data[soalIndex].jenis,
+                            _controllerSoal.text,
+                            _controllerA.text,
+                            _controllerB.text,
+                            _controllerC.text,
+                            _controllerD.text,
+                            _controllerKey.text,
+                            'xsxsx',
+                            0,
+                            0);
                       },
                       child: Container(
                         width: double.infinity,
@@ -270,6 +191,31 @@ class _AddSoalState extends State<AddSoal> {
                   ],
                 ),
               ), // SIMPAN
+              Wrap(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      bloc.deleteSoal(context, soal2.data[soalIndex].id, soal2.data[soalIndex].jenis);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.teal[700],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Text(
+                          'HAPUS',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ), // HAPUS
             ],
           ),
         ),
