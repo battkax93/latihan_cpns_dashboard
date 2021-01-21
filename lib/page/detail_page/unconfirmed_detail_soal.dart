@@ -31,6 +31,7 @@ class _DetailSoal2State extends State<DetailSoal2> {
   String base64Image;
   File tmpFile;
   String errMessage = 'Error Uploading Image';
+  UnconfirmedSoal _unconfirmedSoal = UnconfirmedSoal();
 
   final _controllerSoal = TextEditingController();
   final _controllerA = TextEditingController();
@@ -129,30 +130,27 @@ class _DetailSoal2State extends State<DetailSoal2> {
         ),
         body: bloc.soalById.isEmpty != null
             ? streamBuilder(bloc.soalById)
-            : CircularProgressIndicator());
+            : Container());
   }
 
   streamBuilder(val) {
     return StreamBuilder(
-      stream: bloc.soalById,
-      // ignore: missing_return
+      stream: val,
       builder: (context, snapshot) {
-        setTextSoal(snapshot.data);
+        _unconfirmedSoal = snapshot.data;
         if (snapshot.hasData) {
           return buildList(snapshot.data);
         } else {
           return Center(
-              child: SizedBox(
             child: CircularProgressIndicator(),
-            height: 100,
-            width: 100,
-          ));
+            );
         }
       },
     );
   }
 
   buildList(UnconfirmedSoal _unconfirmedSoal) {
+    setTextSoal(_unconfirmedSoal);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: Colors.yellow[100], boxShadow: [

@@ -1,11 +1,11 @@
-class listSoal {
+class list_soal_unconfirmed {
   int code;
   String message;
   List<Data> data;
 
-  listSoal({this.code, this.message, this.data});
+  list_soal_unconfirmed({this.code, this.message, this.data});
 
-  listSoal.fromJson(Map<String, dynamic> json) {
+  list_soal_unconfirmed.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     message = json['message'];
     if (json['data'] != null) {

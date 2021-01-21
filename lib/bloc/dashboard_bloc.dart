@@ -1,27 +1,28 @@
+import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../resource/repository.dart';
 import '../models/unconfirmed_soal_models.dart';
 import '../models/confirmed_soal_models.dart';
-import '../models/list_soal_models.dart';
+import '../models/list_soal_unconfirmed_models.dart';
 import '../page/viewSoal.dart';
 
 class DashboardBloc {
-  ConfirmedSoal tempSoalAll;
   UnconfirmedSoal tempUnconfirmedSoal;
-  listSoal tempListSoal;
+  list_soal_unconfirmed tempListSoal;
+  list_soal_confirmed tempSoalAll;
   int isDeleted;
 
   final _repository = Repository();
 
   final _soalbyId = PublishSubject<UnconfirmedSoal>();
-  final _soalAllFetcher = PublishSubject<ConfirmedSoal>();
-  final _soalUnconfirmedFetcher = PublishSubject<listSoal>();
+  final _soalConfirmedFetcher = PublishSubject<list_soal_confirmed>();
+  final _soalUnconfirmedFetcher = PublishSubject<list_soal_unconfirmed>();
 
   Observable<UnconfirmedSoal> get soalById => _soalbyId.stream;
-  Observable<ConfirmedSoal> get allSoal => _soalAllFetcher.stream;
-  Observable<listSoal> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
+  Observable<list_soal_confirmed> get allSoal => _soalConfirmedFetcher.stream;
+  Observable<list_soal_unconfirmed> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
 
   getSoalById(String id, String jenisSoal) async {
     UnconfirmedSoal _soal = await _repository.getSoalbyID(id, jenisSoal);
@@ -30,13 +31,12 @@ class DashboardBloc {
   }
 
   fetchAllSoal(String jenisSoal) async {
-    ConfirmedSoal _soal = await _repository.fetchAllSoal(jenisSoal);
-    if (!_soalAllFetcher.isClosed) _soalAllFetcher.sink.add(_soal);
-    tempSoalAll = _soal;
+    list_soal_confirmed _soal = await _repository.fetchConfirmedSoal(jenisSoal);
+    if (!_soalConfirmedFetcher.isClosed) _soalConfirmedFetcher.sink.add(_soal);
   }
 
   fetchUnconfirmedSoal(String jenisSoal) async {
-    listSoal _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
+    list_soal_unconfirmed _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
     if (!_soalUnconfirmedFetcher.isClosed) _soalUnconfirmedFetcher.sink.add(_soal2);
     tempListSoal = _soal2;
   }
@@ -177,7 +177,7 @@ class DashboardBloc {
 
   dispose() {
     _soalbyId.close();
-    _soalAllFetcher.close();
+    _soalConfirmedFetcher.close();
     _soalUnconfirmedFetcher.close();
   }
 

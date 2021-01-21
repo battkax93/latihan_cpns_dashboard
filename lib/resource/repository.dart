@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/unconfirmed_soal_models.dart';
-import '../models/list_soal_models.dart';
+import '../models/list_soal_unconfirmed_models.dart';
 import 'dashboard_provider.dart';
 
 class Repository {
   final dashBoardProvider = DashboardProvider();
 
   //get soal from server
-  Future<ConfirmedSoal> fetchAllSoal(String jenisSoal) => dashBoardProvider.fetchAllSoal(jenisSoal);
   Future<UnconfirmedSoal> getSoalbyID(String id, String jenisSoal) => dashBoardProvider.getSoalById(id, jenisSoal);
-  Future<listSoal> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);
+  Future<list_soal_unconfirmed> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);
+  Future<list_soal_confirmed> fetchConfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllConfirmedSoal(jenisSoal);
 
   //hapus soal dari server
   deleteSoal(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal(ctx, id, jenis);

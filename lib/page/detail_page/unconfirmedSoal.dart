@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:latihan_cpns_dashboard/models/list_soal_models.dart';
+import 'package:latihan_cpns_dashboard/models/list_soal_unconfirmed_models.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
 import 'package:latihan_cpns_dashboard/page/detail_page/unconfirmed_detail_soal.dart';
 
@@ -30,7 +30,7 @@ class _UnconfirmedSoalViewState extends State<UnconfirmedSoalView> with Automati
   Widget build(BuildContext context) {
     return  new StreamBuilder(
       stream: bloc.unconfirmedSoal,
-      builder: (context, AsyncSnapshot<listSoal> snapshot) {
+      builder: (context, AsyncSnapshot<list_soal_unconfirmed> snapshot) {
         if (snapshot.hasData) {
           return buildList(snapshot);
         } else if (snapshot.hasError) {
@@ -41,7 +41,7 @@ class _UnconfirmedSoalViewState extends State<UnconfirmedSoalView> with Automati
     );
   }
 
-  Widget buildList(AsyncSnapshot<listSoal> snapshot) {
+  Widget buildList(AsyncSnapshot<list_soal_unconfirmed> snapshot) {
     return Column(
       children: [
         Container(

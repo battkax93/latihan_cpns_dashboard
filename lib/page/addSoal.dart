@@ -241,7 +241,7 @@ class _AddSoalState extends State<AddSoal> {
                   children: [
                     InkWell(
                       onTap: () {
-                        print(base64Image);
+                        print(' cek gmbr $base64Image');
                         var _soal = _controllerSoal.text;
                         var _a = _controllerA.text;
                         var _b = _controllerB.text;

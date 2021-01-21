@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
 import 'package:latihan_cpns_dashboard/models/confirmed_soal_models.dart';
+import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
 import 'package:latihan_cpns_dashboard/page/detail_page/confirmed_detail_soal.dart';
+import 'package:latihan_cpns_dashboard/page/detail_page/unconfirmed_detail_soal.dart';
 
 
 class ConfirmedSoalView extends StatefulWidget {
@@ -30,7 +32,7 @@ class _ConfirmedSoalViewState extends State<ConfirmedSoalView> with AutomaticKee
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: bloc.allSoal,
-      builder: (context, AsyncSnapshot<ConfirmedSoal> snapshot) {
+      builder: (context, AsyncSnapshot<list_soal_confirmed> snapshot) {
         if (snapshot.hasData) {
           return buildList(snapshot);
         } else if (snapshot.hasError) {
@@ -41,7 +43,7 @@ class _ConfirmedSoalViewState extends State<ConfirmedSoalView> with AutomaticKee
     );
   }
 
-  Widget buildList(AsyncSnapshot<ConfirmedSoal> snapshot) {
+  Widget buildList(AsyncSnapshot<list_soal_confirmed> snapshot) {
     return Column(
       children: [
         Container(
@@ -64,9 +66,9 @@ class _ConfirmedSoalViewState extends State<ConfirmedSoalView> with AutomaticKee
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailSoal(
-                            soal: snapshot.data,
-                            soalIndex: i,
+                          builder: (context) => DetailSoal2(
+                            id: snapshot.data.data[i].id,
+                            jenis: snapshot.data.data[i].jenis,
                           ))).then((value) {
                     print(value);
                     bloc.checkReturn(context,value,widget.jenisSoal);
