@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/unconfirmed_soal_models.dart';
+import '../models/list_soal_models.dart';
 import 'dashboard_provider.dart';
 
 class Repository {
@@ -9,12 +10,11 @@ class Repository {
 
   //get soal from server
   Future<ConfirmedSoal> fetchAllSoal(String jenisSoal) => dashBoardProvider.fetchAllSoal(jenisSoal);
-
-  Future<UnconfirmedSoal> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);
+  Future<UnconfirmedSoal> getSoalbyID(String id, String jenisSoal) => dashBoardProvider.getSoalById(id, jenisSoal);
+  Future<listSoal> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);
 
   //hapus soal dari server
   deleteSoal(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal(ctx, id, jenis);
-
   Future<bool> deleteSoal2(BuildContext ctx, String id, String jenis) => dashBoardProvider.deleteSoal2(ctx, id, jenis);
 
   //update soal from server
@@ -37,8 +37,7 @@ class Repository {
 
   updateSoalUnconfirmed(
       BuildContext ctx,
-      UnconfirmedSoal soal_2,
-      int idx,
+      String id,
       String jenis,
       String soal,
       String a,
@@ -50,7 +49,7 @@ class Repository {
       int bnr,
       int slh) =>
       dashBoardProvider.updateSoalUnconfirmed(
-          ctx, soal_2, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+          ctx, id, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
 
   //add new soal to server
   addNewSoal(BuildContext ctx,

@@ -116,8 +116,6 @@ class _DetailSoalState extends State<DetailSoal> {
             ));
           }
 
-
-
   startUpload() {
     setStatus('Uploading Image...');
     if (null == tmpFile) {

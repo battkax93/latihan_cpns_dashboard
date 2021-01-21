@@ -2,15 +2,16 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'dart:convert';
-import '../bloc/dashboard_bloc.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/unconfirmed_soal_models.dart';
+import '../models/list_soal_models.dart';
 
 class DashboardProvider {
   Client client = Client();
   final endPoint = "http://192.168.100.22/latihan_cpns/api";
-  final ConfirmedSoalKey = "soal.php";
-  final UnconfirmedSoalKey = "soal2.php";
+  final confirmedSoalKey = "soal.php";
+  final unconfirmedSoalKey = "soal2.php";
+  final soalByIdKey = "getSoalbyId.php";
   final deleteSoalKey = "hapusSoal.php";
   final updateSoalKey = "update.php";
   final addSoalKey = "addSoal.php";
@@ -18,7 +19,7 @@ class DashboardProvider {
 
   Future<ConfirmedSoal> fetchAllSoal(String jenisSoal) async {
     print('run fetchAllSoal $jenisSoal');
-    var _url = '$endPoint/$ConfirmedSoalKey?jenis=$jenisSoal';
+    var _url = '$endPoint/$confirmedSoalKey?jenis=$jenisSoal';
     final res = await client.get(_url);
     if (res.statusCode == 200) {
       return ConfirmedSoal.fromJson((jsonDecode(res.body)));
@@ -27,9 +28,20 @@ class DashboardProvider {
     }
   }
 
-  Future<UnconfirmedSoal> fetchAllUnconfirmedSoal(String jenisSoal) async {
+  Future<listSoal> fetchAllUnconfirmedSoal(String jenisSoal) async {
     print('run fetchUnconfirmed $jenisSoal');
-    var _url = '$endPoint/$UnconfirmedSoalKey?jenis=$jenisSoal';
+    var _url = '$endPoint/$unconfirmedSoalKey?jenis=$jenisSoal';
+    final res = await client.get(_url);
+    if (res.statusCode == 200) {
+      return listSoal.fromJson((jsonDecode(res.body)));
+    } else {
+      throw Exception(('Failed to get All Soal'));
+    }
+  }
+
+  Future<UnconfirmedSoal> getSoalById(String id, String jenisSoal) async {
+    print('run getSoalById $jenisSoal');
+    var _url = '$endPoint/$soalByIdKey?id=$id&jenis=$jenisSoal';
     final res = await client.get(_url);
     if (res.statusCode == 200) {
       return UnconfirmedSoal.fromJson((jsonDecode(res.body)));
@@ -79,8 +91,8 @@ class DashboardProvider {
     }
   }
 
-  updateSoalUnconfirmed( BuildContext ctx,  UnconfirmedSoal soalAll,
-      int idx,
+  updateSoalUnconfirmed( BuildContext ctx,
+      String id,
       String jenis,
       String soal,
       String a,
@@ -97,7 +109,7 @@ class DashboardProvider {
       'Content-Type': 'application/json; charset=UTF-8',
     };
     var _body = jsonEncode(<String, String>{
-      'id': soalAll.data[idx].id,
+      'id': id,
       'jenis': jenis,
       'soal': soal,
       'a': a,
@@ -110,6 +122,7 @@ class DashboardProvider {
       'benar': bnr.toString(),
       'salah': slh.toString(),
     });
+    print(_body);
     var res = await client.put(_url, headers: _headers, body: _body);
     if (res.body.contains('true')) {
       print('${res.body}');

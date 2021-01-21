@@ -1,33 +1,4 @@
 class UnconfirmedSoal {
-  int code;
-  String message;
-  List<Data> data;
-
-  UnconfirmedSoal({this.code, this.message, this.data});
-
-  UnconfirmedSoal.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
-    if (json['data'] != null) {
-      data = new List<Data>();
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Data {
   String id;
   String jenis;
   String soal;
@@ -36,12 +7,11 @@ class Data {
   String c;
   String d;
   String jawabanBenar;
-  String isConfirmed;
   String image;
   String benar;
   String salah;
 
-  Data(
+  UnconfirmedSoal(
       {this.id,
         this.jenis,
         this.soal,
@@ -50,12 +20,11 @@ class Data {
         this.c,
         this.d,
         this.jawabanBenar,
-        this.isConfirmed,
         this.image,
         this.benar,
         this.salah});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  UnconfirmedSoal.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     jenis = json['jenis'];
     soal = json['soal'];
@@ -64,7 +33,6 @@ class Data {
     c = json['c'];
     d = json['d'];
     jawabanBenar = json['jawaban_benar'];
-    isConfirmed = json['is_confirmed'];
     image = json['image'];
     benar = json['benar'];
     salah = json['salah'];
@@ -80,7 +48,6 @@ class Data {
     data['c'] = this.c;
     data['d'] = this.d;
     data['jawaban_benar'] = this.jawabanBenar;
-    data['is_confirmed'] = this.isConfirmed;
     data['image'] = this.image;
     data['benar'] = this.benar;
     data['salah'] = this.salah;

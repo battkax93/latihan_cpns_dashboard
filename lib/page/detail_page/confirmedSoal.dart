@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
 import 'package:latihan_cpns_dashboard/models/confirmed_soal_models.dart';
-import 'package:latihan_cpns_dashboard/page/detail_page/detailSoal.dart';
+import 'package:latihan_cpns_dashboard/page/detail_page/confirmed_detail_soal.dart';
 
 
 class ConfirmedSoalView extends StatefulWidget {

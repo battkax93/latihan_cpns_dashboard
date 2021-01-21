@@ -4,20 +4,30 @@ import 'dart:math';
 import '../resource/repository.dart';
 import '../models/unconfirmed_soal_models.dart';
 import '../models/confirmed_soal_models.dart';
+import '../models/list_soal_models.dart';
 import '../page/viewSoal.dart';
 
 class DashboardBloc {
   ConfirmedSoal tempSoalAll;
-  UnconfirmedSoal tempSoalUnconfirmed;
+  UnconfirmedSoal tempUnconfirmedSoal;
+  listSoal tempListSoal;
   int isDeleted;
 
   final _repository = Repository();
 
+  final _soalbyId = PublishSubject<UnconfirmedSoal>();
   final _soalAllFetcher = PublishSubject<ConfirmedSoal>();
-  final _soalUnconfirmedFetcher = PublishSubject<UnconfirmedSoal>();
+  final _soalUnconfirmedFetcher = PublishSubject<listSoal>();
 
+  Observable<UnconfirmedSoal> get soalById => _soalbyId.stream;
   Observable<ConfirmedSoal> get allSoal => _soalAllFetcher.stream;
-  Observable<UnconfirmedSoal> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
+  Observable<listSoal> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
+
+  getSoalById(String id, String jenisSoal) async {
+    UnconfirmedSoal _soal = await _repository.getSoalbyID(id, jenisSoal);
+    if (!_soalbyId.isClosed) _soalbyId.sink.add(_soal);
+    tempUnconfirmedSoal = _soal;
+  }
 
   fetchAllSoal(String jenisSoal) async {
     ConfirmedSoal _soal = await _repository.fetchAllSoal(jenisSoal);
@@ -26,9 +36,9 @@ class DashboardBloc {
   }
 
   fetchUnconfirmedSoal(String jenisSoal) async {
-    UnconfirmedSoal _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
+    listSoal _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
     if (!_soalUnconfirmedFetcher.isClosed) _soalUnconfirmedFetcher.sink.add(_soal2);
-    tempSoalUnconfirmed = _soal2;
+    tempListSoal = _soal2;
   }
 
   addNewSoal(BuildContext ctx,
@@ -78,8 +88,7 @@ class DashboardBloc {
 
   updateSoalUnconfirmed(
       BuildContext ctx,
-      UnconfirmedSoal soalAll,
-      int idx,
+      String id,
       String jenis,
       String soal,
       String a,
@@ -91,10 +100,8 @@ class DashboardBloc {
       int bnr,
       int slh) async {
     await _repository.updateSoalUnconfirmed(
-        ctx, soalAll, idx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+        ctx, id, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
   }
-
-
 
   void showDialogLoading(BuildContext ctx) {
     showGeneralDialog(
@@ -169,6 +176,7 @@ class DashboardBloc {
   }
 
   dispose() {
+    _soalbyId.close();
     _soalAllFetcher.close();
     _soalUnconfirmedFetcher.close();
   }
