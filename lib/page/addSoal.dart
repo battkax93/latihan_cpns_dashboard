@@ -26,8 +26,22 @@ class _AddSoalState extends State<AddSoal> {
   final _controllerC = TextEditingController();
   final _controllerD = TextEditingController();
   final _controllerKey = TextEditingController();
+
+  bool isSoalValidate = false;
+  bool isAValidate = false;
+  bool isBValidate = false;
+  bool isCValidate = false;
+  bool isDValidate = false;
+  bool isKeyValidate = false;
+
   var jenisSoal;
   var img = 'xyxy';
+
+  List<String> typeNeg = [
+    "TIU",
+    "TWK",
+    "TKP",
+  ];
 
   @override
   void initState() {
@@ -53,7 +67,7 @@ class _AddSoalState extends State<AddSoal> {
     });
   }
 
-  void chooseImage() {
+  chooseImage() {
     setState(() {
       // ignore: deprecated_member_use
       file = ImagePicker.pickImage(source: ImageSource.gallery);
@@ -64,7 +78,7 @@ class _AddSoalState extends State<AddSoal> {
     return Container(
       padding: EdgeInsets.all(10),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           chooseImage();
         },
         child: FutureBuilder<File>(
@@ -104,6 +118,54 @@ class _AddSoalState extends State<AddSoal> {
       return;
     }
     fileName = tmpFile.path.split('/').last;
+  }
+
+  validation(){
+    if(jenisSoal==null){
+        Scaffold.of(context).showSnackBar(new SnackBar(
+          content: new Text('JENIS SOAL BELUM DIPILIH !'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
+
+  bool validateTextField() {
+    _controllerSoal.text.isEmpty ? isSoalValidate = false : isSoalValidate = true;
+    _controllerA.text.isEmpty ? isAValidate = false : isAValidate = true;
+    _controllerB.text.isEmpty ? isBValidate = false : isBValidate = true;
+    _controllerC.text.isEmpty ? isCValidate = false : isCValidate = true;
+    _controllerD.text.isEmpty ? isDValidate = false : isDValidate = true;
+    _controllerKey.text.isEmpty ? isKeyValidate = false : isKeyValidate = true;
+
+    bool isConfirm = true;
+    var checkValidate=[isSoalValidate,isAValidate,isBValidate,isCValidate,isDValidate,isKeyValidate];
+
+    for(var i=0;i<checkValidate.length;i++){
+      print(checkValidate[i]);
+      if(checkValidate[i]=false){
+        setState(() {
+          isConfirm = false;
+        });
+      }
+    }
+
+    if(isConfirm) {
+      save();
+    } else {
+      print('error');
+    }
+  }
+
+  save(){
+    print(' cek gmbr $base64Image');
+    var _soal = _controllerSoal.text;
+    var _a = _controllerA.text;
+    var _b = _controllerB.text;
+    var _c = _controllerC.text;
+    var _d = _controllerD.text;
+    var _key = _controllerKey.text;
+    bloc.addNewSoal(context, jenisSoal, _soal, _a, _b, _c,
+        _d, _key, base64Image, 0, 0);
   }
 
   @override
@@ -154,6 +216,7 @@ class _AddSoalState extends State<AddSoal> {
                   decoration: InputDecoration(
                       filled: true,
                       labelText: 'SOAL',
+                      errorText: isSoalValidate ? 'Please enter a Username' : null,
                       fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
@@ -168,6 +231,7 @@ class _AddSoalState extends State<AddSoal> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       filled: true,
+                      errorText: isAValidate ? 'Please enter a Username' : null,
                       labelText: 'A',
                       fillColor: Colors.green[200],
                       border: OutlineInputBorder(
@@ -183,6 +247,7 @@ class _AddSoalState extends State<AddSoal> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       filled: true,
+                      errorText: isBValidate ? 'Please enter a Username' : null,
                       labelText: 'B',
                       fillColor: Colors.red[200],
                       border: OutlineInputBorder(
@@ -198,6 +263,7 @@ class _AddSoalState extends State<AddSoal> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       filled: true,
+                      errorText: isCValidate ? 'Please enter a Username' : null,
                       labelText: 'C',
                       fillColor: Colors.blue[200],
                       border: OutlineInputBorder(
@@ -213,6 +279,7 @@ class _AddSoalState extends State<AddSoal> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       filled: true,
+                      errorText: isDValidate ? 'Please enter a Username' : null,
                       labelText: 'D',
                       fillColor: Colors.orange[200],
                       border: OutlineInputBorder(
@@ -227,6 +294,7 @@ class _AddSoalState extends State<AddSoal> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       filled: true,
+                      errorText: isKeyValidate ? 'Please enter a Username' : null,
                       labelText: 'JAWABAN BENAR',
                       fillColor: Colors.blueGrey[200],
                       border: OutlineInputBorder(
@@ -241,14 +309,7 @@ class _AddSoalState extends State<AddSoal> {
                   children: [
                     InkWell(
                       onTap: () {
-                        print(' cek gmbr $base64Image');
-                        var _soal = _controllerSoal.text;
-                        var _a = _controllerA.text;
-                        var _b = _controllerB.text;
-                        var _c = _controllerC.text;
-                        var _d = _controllerD.text;
-                        var _key = _controllerKey.text;
-                        bloc.addNewSoal(context, jenisSoal, _soal, _a, _b, _c, _d, _key, base64Image, 0, 0);
+                        validateTextField();
                       },
                       child: Container(
                         width: double.infinity,

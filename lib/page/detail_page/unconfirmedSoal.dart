@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_cpns_dashboard/models/list_soal_unconfirmed_models.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
-import 'package:latihan_cpns_dashboard/page/detail_page/unconfirmed_detail_soal.dart';
+import 'package:latihan_cpns_dashboard/page/detail_page/detail_soal.dart';
 
 
 class UnconfirmedSoalView extends StatefulWidget {

@@ -70,8 +70,10 @@ class _DetailSoal2State extends State<DetailSoal2> {
     });
   }
 
+//  'http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',
+
+
   Widget showImage() {
-    print(imgKey);
     return Container(
         padding: EdgeInsets.all(10),
         child: InkWell(
@@ -79,39 +81,104 @@ class _DetailSoal2State extends State<DetailSoal2> {
             chooseImage();
           },
           child: file == null
-              ? Image.network(
-                  'http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',
-                )
+              ? Image.network('http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',)
               : FutureBuilder<File>(
-                  future: file,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<File> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        null != snapshot.data) {
-                      tmpFile = snapshot.data;
-                      base64Image =
-                          base64Encode(snapshot.data.readAsBytesSync());
-                      return Flexible(
-                        child: Image.file(
-                          snapshot.data,
-                          fit: BoxFit.fill,
+            future: file,
+            builder:
+                (BuildContext context, AsyncSnapshot<File> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  null != snapshot.data) {
+                tmpFile = snapshot.data;
+                base64Image =
+                    base64Encode(snapshot.data.readAsBytesSync());
+                return Flexible(
+                  child: Image.file(
+                    snapshot.data,
+                    fit: BoxFit.fill,
+                  ),
+                );
+              } else if (null != snapshot.error) {
+                return Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  width: 250,
+                  height: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.orange[400],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.5), //(x,y)
+                          blurRadius: 1.0,
                         ),
-                      );
-                    } else if (null != snapshot.error) {
-                      return const Text(
-                        'Error Picking Image',
-                        textAlign: TextAlign.center,
-                      );
-                    } else {
-                      return const Text(
-                        'No Image Selected',
-                        textAlign: TextAlign.center,
-                      );
-                    }
-                  },
-                ),
+                      ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'Error Saat Mengambil Gambar',
+                      style: TextStyle(
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  width: 250,
+                  height: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.orange[400],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.5), //(x,y)
+                          blurRadius: 1.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'Tidak Ada Gambar yang dipilih',
+                      style: TextStyle(
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ));
   }
+
 
   startUpload() {
     setStatus('Uploading Image...');
