@@ -1,4 +1,4 @@
-class UnconfirmedSoal {
+class Soal {
   String id;
   String jenis;
   String soal;
@@ -7,11 +7,12 @@ class UnconfirmedSoal {
   String c;
   String d;
   String jawabanBenar;
+  String isConfirmed;
   String image;
   String benar;
   String salah;
 
-  UnconfirmedSoal(
+  Soal(
       {this.id,
         this.jenis,
         this.soal,
@@ -20,11 +21,12 @@ class UnconfirmedSoal {
         this.c,
         this.d,
         this.jawabanBenar,
+        this.isConfirmed,
         this.image,
         this.benar,
         this.salah});
 
-  UnconfirmedSoal.fromJson(Map<String, dynamic> json) {
+  Soal.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     jenis = json['jenis'];
     soal = json['soal'];
@@ -33,6 +35,7 @@ class UnconfirmedSoal {
     c = json['c'];
     d = json['d'];
     jawabanBenar = json['jawaban_benar'];
+    isConfirmed = json['is_confirmed'];
     image = json['image'];
     benar = json['benar'];
     salah = json['salah'];
@@ -48,6 +51,7 @@ class UnconfirmedSoal {
     data['c'] = this.c;
     data['d'] = this.d;
     data['jawaban_benar'] = this.jawabanBenar;
+    data['is_confirmed'] = this.isConfirmed;
     data['image'] = this.image;
     data['benar'] = this.benar;
     data['salah'] = this.salah;

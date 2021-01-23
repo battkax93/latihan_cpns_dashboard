@@ -63,8 +63,11 @@ class _dashBoardState extends State<dashBoard> {
                             ))).then((value) {
                               if(value==1){
                                 bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
-                              } else {
+                              } else if(value==0){
                                 bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
+                              } else {
+                                setState(() {
+                                });
                               }
                     });
                   },

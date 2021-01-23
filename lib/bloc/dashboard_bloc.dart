@@ -3,24 +3,24 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../resource/repository.dart';
-import '../models/unconfirmed_soal_models.dart';
+import '../models/soal.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/list_soal_unconfirmed_models.dart';
 import '../page/viewSoal.dart';
 
 class DashboardBloc {
-  UnconfirmedSoal tempUnconfirmedSoal;
+  Soal tempUnconfirmedSoal;
   list_soal_unconfirmed tempListSoal;
   list_soal_confirmed tempSoalAll;
   int isDeleted;
 
   final _repository = Repository();
 
-  final _soalbyId = PublishSubject<UnconfirmedSoal>();
+  final _soalbyId = PublishSubject<Soal>();
   final _soalConfirmedFetcher = PublishSubject<list_soal_confirmed>();
   final _soalUnconfirmedFetcher = PublishSubject<list_soal_unconfirmed>();
 
-  Observable<UnconfirmedSoal> get soalById => _soalbyId.stream;
+  Observable<Soal> get soalById => _soalbyId.stream;
 
   Observable<list_soal_confirmed> get allSoal => _soalConfirmedFetcher.stream;
 
@@ -28,7 +28,7 @@ class DashboardBloc {
       _soalUnconfirmedFetcher.stream;
 
   getSoalById(String id, String jenisSoal) async {
-    UnconfirmedSoal _soal = await _repository.getSoalbyID(id, jenisSoal);
+    Soal _soal = await _repository.getSoalbyID(id, jenisSoal);
     if (!_soalbyId.isClosed) _soalbyId.sink.add(_soal);
     tempUnconfirmedSoal = _soal;
   }
@@ -96,11 +96,12 @@ class DashboardBloc {
       String c,
       String d,
       String jawaban,
+      int isConfirmed,
       String img,
       int bnr,
       int slh) async {
     await _repository.updateSoalUnconfirmed(
-        ctx, id, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+        ctx, id, jenis, soal, a, b, c, d, jawaban,isConfirmed, img, bnr, slh);
   }
 
   void showDialogLoading(BuildContext ctx) {

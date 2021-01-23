@@ -4,7 +4,7 @@ import 'package:http/http.dart' show Client;
 import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
 import 'dart:convert';
 import '../models/confirmed_soal_models.dart';
-import '../models/unconfirmed_soal_models.dart';
+import '../models/soal.dart';
 import '../models/list_soal_unconfirmed_models.dart';
 
 class DashboardProvider {
@@ -40,13 +40,13 @@ class DashboardProvider {
     }
   }
 
-  Future<UnconfirmedSoal> getSoalById(String id, String jenisSoal) async {
+  Future<Soal> getSoalById(String id, String jenisSoal) async {
     print('run getSoalById $jenisSoal');
     var _url = '$endPoint/$soalByIdKey?id=$id&jenis=$jenisSoal';
     final res = await client.get(_url);
     print(res.body);
     if (res.statusCode == 200) {
-      return UnconfirmedSoal.fromJson((jsonDecode(res.body)));
+      return Soal.fromJson((jsonDecode(res.body)));
     } else {
       throw Exception(('Failed to get All Soal'));
     }
@@ -102,6 +102,7 @@ class DashboardProvider {
       String c,
       String d,
       String jawaban,
+      int isConfirmed,
       String img,
       int bnr,
       int slh) async {
@@ -119,7 +120,7 @@ class DashboardProvider {
       'c': c,
       'd': d,
       'jawaban_benar': jawaban,
-      'is_confirmed':1.toString(),
+      'is_confirmed':isConfirmed.toString(),
       'image': img,
       'benar': bnr.toString(),
       'salah': slh.toString(),
