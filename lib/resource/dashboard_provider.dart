@@ -169,7 +169,6 @@ class DashboardProvider {
       String img,
       int bnr,
       int slh) async {
-    // bloc.showCommonDialog(ctx, 'MENGUPLOAD SOAL');
     var _url = '$endPoint/$addSoalKey';
     var _headers= {
       'Content-Type': 'application/x-www-form-urlencoded',

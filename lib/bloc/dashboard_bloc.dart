@@ -21,8 +21,11 @@ class DashboardBloc {
   final _soalUnconfirmedFetcher = PublishSubject<list_soal_unconfirmed>();
 
   Observable<UnconfirmedSoal> get soalById => _soalbyId.stream;
+
   Observable<list_soal_confirmed> get allSoal => _soalConfirmedFetcher.stream;
-  Observable<list_soal_unconfirmed> get unconfirmedSoal => _soalUnconfirmedFetcher.stream;
+
+  Observable<list_soal_unconfirmed> get unconfirmedSoal =>
+      _soalUnconfirmedFetcher.stream;
 
   getSoalById(String id, String jenisSoal) async {
     UnconfirmedSoal _soal = await _repository.getSoalbyID(id, jenisSoal);
@@ -36,30 +39,27 @@ class DashboardBloc {
   }
 
   fetchUnconfirmedSoal(String jenisSoal) async {
-    list_soal_unconfirmed _soal2 = await _repository.fetchUnconfirmedSoal(jenisSoal);
-    if (!_soalUnconfirmedFetcher.isClosed) _soalUnconfirmedFetcher.sink.add(_soal2);
+    list_soal_unconfirmed _soal2 =
+        await _repository.fetchUnconfirmedSoal(jenisSoal);
+    if (!_soalUnconfirmedFetcher.isClosed)
+      _soalUnconfirmedFetcher.sink.add(_soal2);
     tempListSoal = _soal2;
   }
 
-  addNewSoal(BuildContext ctx,
-      String jenis,
-      String soal,
-      String a,
-      String b,
-      String c,
-      String d,
-      String jawaban,
-      String img,
-      int bnr,
-      int slh) async {
-    await _repository.addNewSoal(ctx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+  addNewSoal(BuildContext ctx, String jenis, String soal, String a, String b,
+      String c, String d, String jawaban, String img, int bnr, int slh) async {
+    if (img == null) img = 'x';
+    await _repository.addNewSoal(
+        ctx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
   }
 
-  deleteSoal(BuildContext ctx, String id, String jenis) async { await _repository.deleteSoal(ctx, id, jenis);}
+  deleteSoal(BuildContext ctx, String id, String jenis) async {
+    await _repository.deleteSoal(ctx, id, jenis);
+  }
 
   Future<bool> deleteSoal2(BuildContext ctx, String id, String jenis) async {
     var _res = await _repository.deleteSoal2(ctx, id, jenis);
-    if(_res){
+    if (_res) {
       showCommonDialog(ctx, 'SUKSES MENGHAPUS SOAL');
       return true;
     } else {
@@ -137,7 +137,7 @@ class DashboardBloc {
       barrierLabel: "Barrier",
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 700),
+      transitionDuration: Duration(milliseconds: 400),
       context: ctx,
       pageBuilder: (_, __, ___) {
         return Center(
@@ -147,7 +147,12 @@ class DashboardBloc {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: Center(child: Text(txt))),
+              child: Center(
+                  child: Text(
+                txt,
+                style: TextStyle(fontSize: 30, color: Colors.blueAccent, decoration: TextDecoration.none),
+                textAlign: TextAlign.center,
+              ))),
         );
       },
       transitionBuilder: (_, anim, __, child) {
@@ -159,8 +164,6 @@ class DashboardBloc {
     );
   }
 
-
-
   checkReturn(BuildContext ctx, int value, String jenisSoal) {
     if (value == 1) {
       showCommonDialog(ctx, 'SUKSES MENGHAPUS SOAL');
@@ -169,9 +172,9 @@ class DashboardBloc {
       showCommonDialog(ctx, 'GAGAL MENGHAPUS SOAL');
     } else if (value == 3) {
       showCommonDialog(ctx, 'SUKSES UPDATE SOAL');
-       fetchAllSoal(jenisSoal);
+      fetchAllSoal(jenisSoal);
     } else if (value == 4) {
-     showCommonDialog(ctx, 'GAGAL UPDATE SOAL');
+      showCommonDialog(ctx, 'GAGAL UPDATE SOAL');
     }
   }
 
@@ -180,6 +183,4 @@ class DashboardBloc {
     _soalConfirmedFetcher.close();
     _soalUnconfirmedFetcher.close();
   }
-
-
 }
