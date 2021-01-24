@@ -10,6 +10,8 @@ import 'dashboard_provider.dart';
 class Repository {
   final dashBoardProvider = DashboardProvider();
 
+  Future<bool> login(BuildContext ctx, String pass) => dashBoardProvider.login(ctx, pass);
+
   //get soal from server
   Future<Soal> getSoalbyID(String id, String jenisSoal) => dashBoardProvider.getSoalById(id, jenisSoal);
   Future<list_soal_unconfirmed> fetchUnconfirmedSoal(String jenisSoal) => dashBoardProvider.fetchAllUnconfirmedSoal(jenisSoal);

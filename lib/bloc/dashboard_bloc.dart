@@ -12,6 +12,7 @@ class DashboardBloc {
   list_soal_unconfirmed tempListSoal;
   list_soal_confirmed tempSoalAll;
   int isDeleted;
+  bool isLogin = false;
 
   final _repository = Repository();
 
@@ -28,6 +29,10 @@ class DashboardBloc {
       _soalUnconfirmedFetcher.stream;
 
   Observable<SettingModels> get settingValue => _settingFetcher.stream;
+
+  Future<bool>login(BuildContext ctx, String pass) async {
+    return await _repository.login(ctx, pass);
+  }
 
   getSetting() async {
     SettingModels _setting = await _repository.getSetting();

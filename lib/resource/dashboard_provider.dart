@@ -20,6 +20,18 @@ class DashboardProvider {
   final hitungSoalKey = "hitungSoal.php";
   final getSettingKey = "getSetting.php";
   final updateSettingKey = "updateSetting.php";
+  final loginKey = "login.php";
+
+  Future<bool>login(BuildContext ctx, String pass) async {
+    var _url = '$endPoint/$loginKey?pass=$pass';
+    final _res = await client.get(_url);
+    print(_res.body);
+    if(_res.body.contains('true')){
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   Future<list_soal_confirmed> fetchAllConfirmedSoal(String jenisSoal) async {
     print('run fetchAllSoal $jenisSoal');

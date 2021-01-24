@@ -39,7 +39,17 @@ class dashBoard extends StatefulWidget {
 }
 
 class _dashBoardState extends State<dashBoard> {
+
   final bloc = DashboardBloc();
+  final _controllerPass = TextEditingController();
+  var passwordVisible = true;
+  var login = false;
+
+  @override
+  void initState() {
+    passwordVisible = true;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,177 +58,259 @@ class _dashBoardState extends State<dashBoard> {
         title: Text(widget.title),
       ),
       backgroundColor: Colors.transparent,
-      body: Center(
+      body: !login ? loginView() : mainApp()
+    );
+  }
+
+  checkLogin(BuildContext ctx, String pass) async {
+    login = await bloc.login(ctx, pass);
+  }
+
+  loginView(){
+    return Center(
+      child: Container(
+        width: 250,
+        height: 250,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.blue[200]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Wrap(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddSoal(
-                            ))).then((value) {
-                              if(value==1){
-                                bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
-                              } else if(value==0){
-                                bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
-                              } else {
-                                setState(() {
-                                });
-                              }
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
-                    width: 250,
-                    height: 125,
-                    decoration: BoxDecoration(
-                        color: Colors.blue[400],
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(0.0, 0.5), //(x,y)
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Text(
-                        'ADD SOAL',
-                        style: TextStyle(
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(125, 0, 0, 255),
-                              ),
-                            ],
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800),
+          children: [
+            TextField(
+              controller: _controllerPass,
+              obscureText: passwordVisible,
+              decoration: InputDecoration(
+                  filled: true,
+                  labelText: 'PASSWORD',
+                  suffixIcon:  IconButton(
+                      icon: Icon(
+                        passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            ), //ADD
-            Wrap(
-              children: [
-                InkWell(
-                  onTap: () {
-                    showDialog();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
-                    width: 250,
-                    height: 125,
-                    decoration: BoxDecoration(
-                        color: Colors.orange[400],
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(0.0, 0.5), //(x,y)
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Text(
-                        'VIEW SOAL',
-                        style: TextStyle(
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(125, 0, 0, 255),
-                              ),
-                            ],
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ), //VIEW
-            Wrap(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingPage(
-                            ))).then((value) {
-                      if(value==1){
-                        bloc.showCommonDialog(context, 'SUKSES MENGUPDATE SETTING');
-                      } else if(value==0){
-                        bloc.showCommonDialog(context, 'GAGAL MENGUPDATE SETTING');
-                      } else {
+                      onPressed: () {
                         setState(() {
+                          passwordVisible = !passwordVisible ? true : false;
                         });
-                      }
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
-                    width: 250,
-                    height: 125,
-                    decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(0.0, 0.5), //(x,y)
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Text(
-                        'SETTING',
-                        style: TextStyle(
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(125, 0, 0, 255),
-                              ),
-                            ],
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800),
+                        }
+                  ),
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+            SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              child: Wrap(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        checkLogin(context, _controllerPass.text);
+                      });
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.orange[400],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Text(
+                          'SIMPAN',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ), //SETTING
+                ],
+              ),
+            ), // SIMPAN
           ],
         ),
+      ),
+    );
+  }
+
+  mainApp(){
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Wrap(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddSoal(
+                          ))).then((value) {
+                    if(value==1){
+                      bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
+                    } else if(value==0){
+                      bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
+                    } else {
+                      setState(() {
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  width: 250,
+                  height: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.blue[400],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.5), //(x,y)
+                          blurRadius: 1.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'ADD SOAL',
+                      style: TextStyle(
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ), //ADD
+          Wrap(
+            children: [
+              InkWell(
+                onTap: () {
+                  showDialog();
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  width: 250,
+                  height: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.orange[400],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.5), //(x,y)
+                          blurRadius: 1.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'VIEW SOAL',
+                      style: TextStyle(
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ), //VIEW
+          Wrap(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingPage(
+                          ))).then((value) {
+                    if(value==1){
+                      bloc.showCommonDialog(context, 'SUKSES MENGUPDATE SETTING');
+                    } else if(value==0){
+                      bloc.showCommonDialog(context, 'GAGAL MENGUPDATE SETTING');
+                    } else {
+                      setState(() {
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
+                  width: 250,
+                  height: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.5), //(x,y)
+                          blurRadius: 1.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'SETTING',
+                      style: TextStyle(
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ), //SETTING
+        ],
       ),
     );
   }
