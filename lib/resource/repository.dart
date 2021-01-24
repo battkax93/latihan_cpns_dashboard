@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
+import 'package:latihan_cpns_dashboard/models/setting_model.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/soal.dart';
 import '../models/list_soal_unconfirmed_models.dart';
@@ -65,4 +66,15 @@ class Repository {
       String img,
       int bnr,
       int slh)=> dashBoardProvider.addNewSoal(ctx, jenis, soal, a, b, c, d, jawaban, img, bnr, slh);
+
+  //get setting from server
+  Future<SettingModels> getSetting() => dashBoardProvider.getSetting();
+
+  //update setting
+  updateSetting(
+      BuildContext ctx,
+      int isMaintenance,
+      int isContainAds,
+      int isApproveAdd
+      )=>dashBoardProvider.updateSetting(ctx, isMaintenance, isContainAds, isApproveAdd);
 }

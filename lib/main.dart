@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latihan_cpns_dashboard/page/setting_page.dart';
 import 'package:latihan_cpns_dashboard/page/viewSoal.dart';
 import 'package:latihan_cpns_dashboard/page/addSoal.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
@@ -161,7 +162,20 @@ class _dashBoardState extends State<dashBoard> {
               children: [
                 InkWell(
                   onTap: () {
-                    // bloc.fetchCountSoal('TIU', context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingPage(
+                            ))).then((value) {
+                      if(value==1){
+                        bloc.showCommonDialog(context, 'SUKSES MENGUPDATE SETTING');
+                      } else if(value==0){
+                        bloc.showCommonDialog(context, 'GAGAL MENGUPDATE SETTING');
+                      } else {
+                        setState(() {
+                        });
+                      }
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),

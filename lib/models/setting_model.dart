@@ -1,12 +1,12 @@
-class setting {
+class SettingModels {
   String id;
   String isMaintenance;
   String isContainAds;
   String isApproveAdd;
 
-  setting({this.id, this.isMaintenance, this.isContainAds, this.isApproveAdd});
+  SettingModels({this.id, this.isMaintenance, this.isContainAds, this.isApproveAdd});
 
-  setting.fromJson(Map<String, dynamic> json) {
+  SettingModels.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     isMaintenance = json['is_maintenance'];
     isContainAds = json['is_contain_ads'];

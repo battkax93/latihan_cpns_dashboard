@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client;
 import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
+import 'package:latihan_cpns_dashboard/models/setting_model.dart';
 import 'dart:convert';
 import '../models/confirmed_soal_models.dart';
 import '../models/soal.dart';
@@ -17,6 +18,8 @@ class DashboardProvider {
   final updateSoalKey = "update.php";
   final addSoalKey = "addSoal.php";
   final hitungSoalKey = "hitungSoal.php";
+  final getSettingKey = "getSetting.php";
+  final updateSettingKey = "updateSetting.php";
 
   Future<list_soal_confirmed> fetchAllConfirmedSoal(String jenisSoal) async {
     print('run fetchAllSoal $jenisSoal');
@@ -29,7 +32,8 @@ class DashboardProvider {
     }
   }
 
-  Future<list_soal_unconfirmed> fetchAllUnconfirmedSoal(String jenisSoal) async {
+  Future<list_soal_unconfirmed> fetchAllUnconfirmedSoal(
+      String jenisSoal) async {
     print('run fetchUnconfirmed $jenisSoal');
     var _url = '$endPoint/$unconfirmedSoalKey?jenis=$jenisSoal';
     final res = await client.get(_url);
@@ -52,7 +56,9 @@ class DashboardProvider {
     }
   }
 
-  updateSoal( BuildContext ctx,  ConfirmedSoal soalAll,
+  updateSoal(
+      BuildContext ctx,
+      ConfirmedSoal soalAll,
       int idx,
       String jenis,
       String soal,
@@ -65,7 +71,7 @@ class DashboardProvider {
       int bnr,
       int slh) async {
     var _url = '$endPoint/$updateSoalKey';
-    var _headers= <String, String>{
+    var _headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
     var _body = jsonEncode(<String, String>{
@@ -77,7 +83,7 @@ class DashboardProvider {
       'c': c,
       'd': d,
       'jawaban_benar': jawaban,
-      'is_confirmed':1.toString(),
+      'is_confirmed': 1.toString(),
       'image': img,
       'benar': bnr.toString(),
       'salah': slh.toString(),
@@ -93,7 +99,8 @@ class DashboardProvider {
     }
   }
 
-  updateSoalUnconfirmed( BuildContext ctx,
+  updateSoalUnconfirmed(
+      BuildContext ctx,
       String id,
       String jenis,
       String soal,
@@ -108,7 +115,7 @@ class DashboardProvider {
       int slh) async {
     print('run updateSoalunconfirmed');
     var _url = '$endPoint/$updateSoalKey';
-    var _headers= <String, String>{
+    var _headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
     var _body = jsonEncode(<String, String>{
@@ -120,7 +127,7 @@ class DashboardProvider {
       'c': c,
       'd': d,
       'jawaban_benar': jawaban,
-      'is_confirmed':isConfirmed.toString(),
+      'is_confirmed': isConfirmed.toString(),
       'image': img,
       'benar': bnr.toString(),
       'salah': slh.toString(),
@@ -140,7 +147,7 @@ class DashboardProvider {
     print(id);
     var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
     final res = await client.get(_url);
-    if(res.body.contains('true')){
+    if (res.body.contains('true')) {
       print('${res.body}');
       Navigator.pop(ctx, 1);
     } else {
@@ -152,14 +159,15 @@ class DashboardProvider {
     print(id);
     var _url = '$endPoint/$deleteSoalKey?id=$id&jenis=$jenis';
     final res = await client.get(_url);
-    if(res.body.contains('true')){
+    if (res.body.contains('true')) {
       return true;
     } else {
       return false;
     }
   }
 
-  Future addNewSoal(BuildContext ctx,
+  Future addNewSoal(
+      BuildContext ctx,
       String jenis,
       String soal,
       String a,
@@ -171,7 +179,7 @@ class DashboardProvider {
       int bnr,
       int slh) async {
     var _url = '$endPoint/$addSoalKey';
-    var _headers= {
+    var _headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     var _body = {
@@ -190,11 +198,50 @@ class DashboardProvider {
     print(_body);
     var _res = await client.post(_url, body: _body);
     print(_res.body);
-    if(_res.body.contains('true')){
-      Navigator.pop(ctx,1);
+    if (_res.body.contains('true')) {
+      Navigator.pop(ctx, 1);
     } else {
-      Navigator.pop(ctx,0);
+      Navigator.pop(ctx, 0);
     }
   }
 
+  Future<SettingModels> getSetting() async {
+    print('run getSetting');
+    var _url = '$endPoint/$getSettingKey';
+    final res = await client.get(_url);
+    if (res.statusCode == 200) {
+      print('${res.body}');
+      return SettingModels.fromJson((jsonDecode(res.body)));
+    } else {
+      throw Exception(('Failed to get All Soal'));
+    }
+  }
+
+  updateSetting(
+      BuildContext ctx,
+      int isMaintenance,
+      int isContainAds,
+      int isApproveAdd) async {
+    print('run UpdateSetting');
+    var _url = '$endPoint/$updateSettingKey';
+    var _headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    var _body = jsonEncode(<String, String>{
+      'is_maintenance' : isMaintenance.toString(),
+      'is_contain_ads' : isContainAds.toString(),
+      'is_approve_add' : isApproveAdd.toString()
+    });
+    print(_body);
+    var res = await client.put(_url, headers: _headers, body: _body);
+    if (res.body.contains('true')) {
+      print('${res.body}');
+      Navigator.pop(ctx);
+      Navigator.pop(ctx, 1);
+    } else {
+      print('${res.body}');
+      Navigator.pop(ctx);
+      Navigator.pop(ctx, 1);
+    }
+  }
 }

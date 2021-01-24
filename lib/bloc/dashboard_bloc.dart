@@ -1,12 +1,11 @@
 import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
+import 'package:latihan_cpns_dashboard/models/setting_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import '../resource/repository.dart';
 import '../models/soal.dart';
 import '../models/confirmed_soal_models.dart';
 import '../models/list_soal_unconfirmed_models.dart';
-import '../page/viewSoal.dart';
 
 class DashboardBloc {
   Soal tempUnconfirmedSoal;
@@ -19,6 +18,7 @@ class DashboardBloc {
   final _soalbyId = PublishSubject<Soal>();
   final _soalConfirmedFetcher = PublishSubject<list_soal_confirmed>();
   final _soalUnconfirmedFetcher = PublishSubject<list_soal_unconfirmed>();
+  final _settingFetcher = PublishSubject<SettingModels>();
 
   Observable<Soal> get soalById => _soalbyId.stream;
 
@@ -26,6 +26,20 @@ class DashboardBloc {
 
   Observable<list_soal_unconfirmed> get unconfirmedSoal =>
       _soalUnconfirmedFetcher.stream;
+
+  Observable<SettingModels> get settingValue => _settingFetcher.stream;
+
+  getSetting() async {
+    SettingModels _setting = await _repository.getSetting();
+    if (!_settingFetcher.isClosed) _settingFetcher.sink.add(_setting);
+  }
+
+  updateSetting(BuildContext ctx, int isMaintenance, int isContainAds,
+      int isApproveAdd) async {
+    showDialogLoading(ctx);
+    await _repository.updateSetting(
+        ctx, isMaintenance, isContainAds, isApproveAdd);
+  }
 
   getSoalById(String id, String jenisSoal) async {
     Soal _soal = await _repository.getSoalbyID(id, jenisSoal);
@@ -101,7 +115,7 @@ class DashboardBloc {
       int bnr,
       int slh) async {
     await _repository.updateSoalUnconfirmed(
-        ctx, id, jenis, soal, a, b, c, d, jawaban,isConfirmed, img, bnr, slh);
+        ctx, id, jenis, soal, a, b, c, d, jawaban, isConfirmed, img, bnr, slh);
   }
 
   void showDialogLoading(BuildContext ctx) {
@@ -114,8 +128,8 @@ class DashboardBloc {
       pageBuilder: (_, __, ___) {
         return Center(
           child: Container(
-              height: 300,
-              width: 300,
+              height: 150,
+              width: 150,
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
@@ -151,7 +165,10 @@ class DashboardBloc {
               child: Center(
                   child: Text(
                 txt,
-                style: TextStyle(fontSize: 30, color: Colors.blueAccent, decoration: TextDecoration.none),
+                style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.blueAccent,
+                    decoration: TextDecoration.none),
                 textAlign: TextAlign.center,
               ))),
         );
@@ -180,6 +197,7 @@ class DashboardBloc {
   }
 
   dispose() {
+    _settingFetcher.close();
     _soalbyId.close();
     _soalConfirmedFetcher.close();
     _soalUnconfirmedFetcher.close();

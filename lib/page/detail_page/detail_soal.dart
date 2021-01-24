@@ -73,8 +73,6 @@ class _DetailSoal2State extends State<DetailSoal2> {
     });
   }
 
-//  'http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',
-
   Widget showImage() {
     return Container(
         padding: EdgeInsets.all(10),
