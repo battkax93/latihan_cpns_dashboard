@@ -1,3 +1,4 @@
+import 'package:latihan_cpns_dashboard/main.dart';
 import 'package:latihan_cpns_dashboard/models/list_soal_confirmed_models.dart';
 import 'package:latihan_cpns_dashboard/models/setting_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -30,8 +31,18 @@ class DashboardBloc {
 
   Observable<SettingModels> get settingValue => _settingFetcher.stream;
 
-  Future<bool>login(BuildContext ctx, String pass) async {
-    return await _repository.login(ctx, pass);
+  login(BuildContext ctx, String pass) async {
+    showDialogLoading(ctx);
+    var value = await _repository.login(ctx, pass);
+    Navigator.pop(ctx);
+    if(value){
+      Navigator.push(
+          ctx,
+          MaterialPageRoute(
+              builder: (context) => MainMenu()));
+    } else {
+      showCommonDialog(ctx, 'PASSWORD SALAH');
+    }
   }
 
   getSetting() async {

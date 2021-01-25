@@ -58,12 +58,16 @@ class _dashBoardState extends State<dashBoard> {
         title: Text(widget.title),
       ),
       backgroundColor: Colors.transparent,
-      body: !login ? loginView() : mainApp()
+      body: loginView()
     );
   }
 
   checkLogin(BuildContext ctx, String pass) async {
-    login = await bloc.login(ctx, pass);
+    if (_controllerPass.text.isEmpty) {
+      bloc.showCommonDialog(ctx, 'BELUM MEMASUKAN PASSWORD');
+    } else {
+      login = await bloc.login(ctx, pass);
+    }
   }
 
   loginView(){
@@ -140,182 +144,13 @@ class _dashBoardState extends State<dashBoard> {
     );
   }
 
-  mainApp(){
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Wrap(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddSoal(
-                          ))).then((value) {
-                    if(value==1){
-                      bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
-                    } else if(value==0){
-                      bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
-                    } else {
-                      setState(() {
-                      });
-                    }
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  width: 250,
-                  height: 125,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[400],
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(0.0, 0.5), //(x,y)
-                          blurRadius: 1.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      'ADD SOAL',
-                      style: TextStyle(
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(125, 0, 0, 255),
-                            ),
-                          ],
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ), //ADD
-          Wrap(
-            children: [
-              InkWell(
-                onTap: () {
-                  showDialog();
-                },
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  width: 250,
-                  height: 125,
-                  decoration: BoxDecoration(
-                      color: Colors.orange[400],
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(0.0, 0.5), //(x,y)
-                          blurRadius: 1.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      'VIEW SOAL',
-                      style: TextStyle(
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(125, 0, 0, 255),
-                            ),
-                          ],
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ), //VIEW
-          Wrap(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingPage(
-                          ))).then((value) {
-                    if(value==1){
-                      bloc.showCommonDialog(context, 'SUKSES MENGUPDATE SETTING');
-                    } else if(value==0){
-                      bloc.showCommonDialog(context, 'GAGAL MENGUPDATE SETTING');
-                    } else {
-                      setState(() {
-                      });
-                    }
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  width: 250,
-                  height: 125,
-                  decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(0.0, 0.5), //(x,y)
-                          blurRadius: 1.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      'SETTING',
-                      style: TextStyle(
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(125, 0, 0, 255),
-                            ),
-                          ],
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ), //SETTING
-        ],
-      ),
-    );
-  }
+}
 
-  void changePage(String jenisSoal){
+class MainMenu extends StatelessWidget {
+
+  final bloc = DashboardBloc();
+
+  void changePage(BuildContext context, String jenisSoal){
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -324,7 +159,7 @@ class _dashBoardState extends State<dashBoard> {
             )));
   }
 
-  void showDialog() {
+  void showDialog(BuildContext context) {
     showGeneralDialog(
       barrierLabel: "Barrier",
       barrierDismissible: true,
@@ -361,7 +196,7 @@ class _dashBoardState extends State<dashBoard> {
                     children: [
                       InkWell(
                         onTap: () {
-                          changePage('TIU');
+                          changePage(context, 'TIU');
                         },
                         child: Container(
                           margin: EdgeInsets.all(10),
@@ -410,7 +245,7 @@ class _dashBoardState extends State<dashBoard> {
                     children: [
                       InkWell(
                         onTap: () {
-                          changePage('TWK');
+                          changePage(context, 'TWK');
                         },
                         child: Container(
                           margin: EdgeInsets.all(10),
@@ -459,7 +294,7 @@ class _dashBoardState extends State<dashBoard> {
                     children: [
                       InkWell(
                         onTap: () {
-                          changePage('TKP');
+                          changePage(context, 'TKP');
                         },
                         child: Container(
                           margin: EdgeInsets.all(10),
@@ -516,4 +351,189 @@ class _dashBoardState extends State<dashBoard> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: 'LATIHAN CPNS DASHBOARD',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Scaffold(
+          appBar: AppBar(title: Text('LATIHAN CPNS DASHBOARD')),
+          body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        "http://192.168.100.22/latihan_cpns/asset/background.jpg"),
+                    fit: BoxFit.cover)),
+            child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Wrap(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddSoal(
+                                    ))).then((value) {
+                              if(value==1){
+                                bloc.showCommonDialog(context, 'SUKSES MENGUPLOAD SOAL');
+                              } else if(value==0){
+                                bloc.showCommonDialog(context, 'GAGAL MENGUPLOAD SOAL');
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
+                            width: 250,
+                            height: 125,
+                            decoration: BoxDecoration(
+                                color: Colors.blue[400],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0.0, 0.5), //(x,y)
+                                    blurRadius: 1.0,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                'ADD SOAL',
+                                style: TextStyle(
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(125, 0, 0, 255),
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //ADD
+                    Wrap(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showDialog(context);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
+                            width: 250,
+                            height: 125,
+                            decoration: BoxDecoration(
+                                color: Colors.orange[400],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0.0, 0.5), //(x,y)
+                                    blurRadius: 1.0,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                'VIEW SOAL',
+                                style: TextStyle(
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(125, 0, 0, 255),
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //VIEW
+                    Wrap(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SettingPage(
+                                    ))).then((value) {
+                              if(value==1){
+                                bloc.showCommonDialog(context, 'SUKSES MENGUPDATE SETTING');
+                              } else if(value==0){
+                                bloc.showCommonDialog(context, 'GAGAL MENGUPDATE SETTING');
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
+                            width: 250,
+                            height: 125,
+                            decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0.0, 0.5), //(x,y)
+                                    blurRadius: 1.0,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                'SETTING',
+                                style: TextStyle(
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(2.0, 2.0),
+                                        blurRadius: 3.0,
+                                        color: Color.fromARGB(125, 0, 0, 255),
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //SETTING
+                  ],
+                ),
+              ),
+          ),
+        ));
+
+  }
 }
