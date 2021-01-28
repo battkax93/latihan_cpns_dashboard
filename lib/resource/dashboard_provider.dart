@@ -191,9 +191,6 @@ class DashboardProvider {
       int bnr,
       int slh) async {
     var _url = '$endPoint/$addSoalKey';
-    var _headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
     var _body = {
       'jenis': jenis,
       'soal': soal,
