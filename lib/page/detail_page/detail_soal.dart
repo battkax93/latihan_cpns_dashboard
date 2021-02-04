@@ -5,6 +5,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:latihan_cpns_dashboard/models/soal.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../bloc/dashboard_bloc.dart';
+import 'package:latihan_cpns_dashboard/common/common_key.dart';
 
 class DetailSoal2 extends StatefulWidget {
   final String id;
@@ -82,7 +83,7 @@ class _DetailSoal2State extends State<DetailSoal2> {
           },
           child: file == null
               ? Image.network(
-                  'http://192.168.100.22/latihan_cpns/api/image/$imgKey.jpg',
+                  '${common.hostname}/api/image/$imgKey.jpg',
                 )
               : FutureBuilder<File>(
                   future: file,

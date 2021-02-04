@@ -3,7 +3,7 @@ import 'package:latihan_cpns_dashboard/page/setting_page.dart';
 import 'package:latihan_cpns_dashboard/page/viewSoal.dart';
 import 'package:latihan_cpns_dashboard/page/addSoal.dart';
 import 'package:latihan_cpns_dashboard/bloc/dashboard_bloc.dart';
-
+import 'common/common_key.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: NetworkImage(
-                      "http://192.168.100.22/latihan_cpns/asset/background.jpg"),
+                      "${common.hostname}/asset/background.jpg"),
                   fit: BoxFit.cover)),
           child: dashBoard(title: 'LATIHAN CPNS DASHBOARD'),
         ));

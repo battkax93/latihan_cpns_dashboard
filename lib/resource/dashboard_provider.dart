@@ -7,10 +7,11 @@ import 'dart:convert';
 import '../models/confirmed_soal_models.dart';
 import '../models/soal.dart';
 import '../models/list_soal_unconfirmed_models.dart';
+import 'package:latihan_cpns_dashboard/common/common_key.dart';
 
 class DashboardProvider {
   Client client = Client();
-  final endPoint = "http://192.168.100.22/latihan_cpns/api";
+  final endPoint = "${common.hostname}/api";
   final confirmedSoalKey = "soal.php";
   final unconfirmedSoalKey = "soal2.php";
   final soalByIdKey = "getSoalbyId.php";
@@ -60,6 +61,7 @@ class DashboardProvider {
     print('run getSoalById $jenisSoal');
     var _url = '$endPoint/$soalByIdKey?id=$id&jenis=$jenisSoal';
     final res = await client.get(_url);
+    print(_url);
     print(res.body);
     if (res.statusCode == 200) {
       return Soal.fromJson((jsonDecode(res.body)));
@@ -144,6 +146,7 @@ class DashboardProvider {
       'benar': bnr.toString(),
       'salah': slh.toString(),
     });
+    print(_url);
     print(_body);
     var res = await client.put(_url, headers: _headers, body: _body);
     if (res.body.contains('true')) {
@@ -191,6 +194,9 @@ class DashboardProvider {
       int bnr,
       int slh) async {
     var _url = '$endPoint/$addSoalKey';
+    var _headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
     var _body = {
       'jenis': jenis,
       'soal': soal,
@@ -204,8 +210,9 @@ class DashboardProvider {
       'benar': bnr.toString(),
       'salah': slh.toString()
     };
+    print(_url);
     print(_body);
-    var _res = await client.post(_url, body: _body);
+    var _res = await client.post(_url, headers: _headers,  body: _body);
     print(_res.body);
     if (_res.body.contains('true')) {
       Navigator.pop(ctx, 1);
